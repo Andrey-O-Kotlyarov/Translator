@@ -1,0 +1,352 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Application</title> 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="icon" href="/favi.png" sizes="any" type="image/png"/> 
+    <style>
+      body {
+        min-width: 460px; 
+        background: #FFF8CC;
+        font-family: Helvetica;
+        /*overflow-x: hidden; */
+      } 
+      .test {
+        position: absolute; 
+        width: 10%; 
+        height: 17px; 
+        background: rgba(128, 0, 0, 1); 
+        left: 1100px;
+        top: 84px; 
+        display: none; 
+      }
+      .picture { 
+        position: absolute; 
+        width: 380px; 
+        /*width: 29%; */
+        transform: rotate(24deg);
+        margin: -10px 0 0 -107px;  
+      } 
+      .picture2 { 
+        position: absolute; 
+        width: 183px; 
+        top: 289px; 
+        /*left: 900px; */
+        right: 190px; 
+        /*margin: -24px 0 0 909px; */
+      } 
+      .button-and-field { 
+        width: 100%; 
+        height: 130px; 
+        /*background: #FFDB89; */
+        margin: 5px 0 10px 0; 
+        padding: 2px 0 10px 0; 
+        display: flex;        
+      }
+      .field-and-instructon { 
+        /*width: 62%; */
+        width: 809px; 
+        height: 100px; 
+        background: #FFF8CC;        
+        color: rgba(128, 0, 0, 1);   
+        font-size: 14px;  
+        font-weight: bold;  
+        margin: 89px auto 10px 200px;         
+      } 
+      input:focus,
+      input:hover {
+        outline: none; 
+        border: none; 
+        box-shadow: none; 
+      }
+      .header { 
+        position: absolute; 
+        width: 614px; 
+        top: 10px; 
+        left: 305px; 
+        /*width: 76%; 
+        margin: 0px auto 24px 12%; */
+        height: 65px; 
+        background: #FFDB89;
+        color: rgba(128, 0, 0, 1);
+        font-size: 47px; 
+        font-weight: bold;
+        text-align: center; 
+        border: none;
+        padding: 3px 0 0 0;  
+        border-radius: 20%;               
+      }
+      .header:hover { 
+        box-shadow: 0 9px 10px rgba(0, 0, 0, 0.4);
+      }
+      .registration { 
+        background: #FFDB89;
+        width: 150px; 
+        height: 74px; 
+        border-radius: 20px; 
+        border: none; 
+        color: rgba(128, 0, 0, 1); 
+        font-size: 14px;
+        font-weight: bold; 
+        text-align: center; 
+        margin: 2px auto -80px 50px; 
+        overflow: hidden; 
+        position: relative; 
+      } 
+      .registration:hover { 
+        box-shadow: 0 9px 10px rgba(0, 0, 0, 0.4);
+      } 
+      .username-block { 
+        /*width: 117px; */
+        width: 90%; 
+        height: 17px; 
+        background: #FFDB89; 
+        /*background: white; */
+        overflow: hidden; 
+        word-break: break-all; 
+        white-space: nowrap; 
+        margin: -4px auto 0px auto; 
+        position: absolute; 
+        top: 66%; 
+        left: 5%;
+      }       
+      .login-avatar { 
+        /*width: 50px; */
+        width: 49px; 
+        margin: 0px auto 0px auto; 
+      }
+      .field { 
+        width: 100%; 
+        height: 50px; 
+        border: none; 
+        color: rgba(128, 0, 0, 1); 
+        font-size: 19px;
+        background: white;         
+      }     
+      .instruction { 
+        width: 70%; 
+        height: 100px;       
+        color: rgba(128, 0, 0, 1);   
+        font-size: 19px; 
+        font-weight: bold;   
+        margin: 86px auto 50px 70px; 
+        /*text-align: center; */
+      }    
+      .button-block { 
+        width: 200px;
+        height: 100px;       
+        display: flex;        
+        flex-direction: column; 
+        align-items: flex-end;     
+        margin: 91px 20px 10px auto;         
+      } 
+      .button-block-2 { 
+        width: 200px;
+        height: 300px;      
+        display: flex;        
+        flex-direction: column; 
+        align-items: flex-end;     
+        margin: 121px 20px 10px auto;         
+      } 
+      .button-block-3 { 
+        width: 200px;
+        height: 80px;      
+        display: flex;        
+        flex-direction: column; 
+        align-items: flex-end;     
+        margin: 0px 20px -85px auto;  
+      }
+      .download-button { 
+        width: 150px;
+        height: 66px;
+        margin: 0px 0px 25px auto;       
+        padding: 10px 20px;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        /*cursor: pointer; */
+        font-size: 18px;
+        font-weight: bold; 
+        /*text-shadow: 2px 3px grey; */
+        background-color: #4CAF50;                
+        position: relative;
+        top: 0;        
+        box-shadow: 0 8px 0 #2E7D32, 0 9px 10px rgba(0, 0, 0, 0.4);   
+        transition: all 0.1s ease;
+      }
+      .download-button:active {
+        top: 8px; 
+        box-shadow: 0 0 0 #2E7D32, 0 0 5px rgba(0, 0, 0, 0.4);
+      }  
+      .separating-line {
+        height: 4px;
+        background: rgba(128, 0, 0, 1); 
+        margin: 166px 210px 42px 20px;   
+      }
+      .text-block {
+        white-space: pre-line;         
+        /*position: absolute; */
+        /*width: 74%; */
+        /*top: 520px; */
+        /*right: 220px; */
+        width: 950px; 
+        margin: 0px 0px 120px 124px; 
+      } 
+      .image-block {         
+        width: 950px;
+        position: absolute; 
+        top: 520px;         
+        left: 132px; 
+        /*right: 220px; */ 
+        /*margin: -118px auto 100px 125px; */
+      } 
+      .hidden {
+        display: none; 
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="test"> 
+    </div> 
+
+    <img class="picture" src="/giraftransparent.png"> 
+    
+    <form action="/index" method="GET">
+      <button class="header" id="indexButton">
+        Language Teacher
+      </button> 
+    </form> 
+
+    <form class="button-block-3" action="/regform" method="GET">  
+      <button class="registration">
+        <img class="login-avatar" src="/login-avatar.png">
+        <div class="username-block">  
+          <div th:if="${user != null && !#strings.isEmpty(user)}" th:text="${user}">    
+          </div> 
+          <div th:unless="${user != null && !#strings.isEmpty(user)}">
+            войти
+          </div>
+        </div>
+      </button> 
+    </form>
+        
+    <form class="button-and-field" action="/screen" method="GET">       
+      <div class="field-and-instructon">         
+        <input class="field" type="text" name="login">
+        <div>
+          вставьте сюда URL страницы, которую хотите отсканировать, и нажмите кнопку "сканировать"
+        </div>        
+      </div> 
+      <div class="button-block"> 
+        <div>                  
+          <button class="download-button" type="submit" name="bigSize" value="false">
+            сканировать
+          </button>  
+        </div>
+        <div>                          
+          <button class="download-button" type="submit" name="bigSize" value="true">
+            сканировать <br/> 1500 строк
+          </button> 
+        </div>                
+      </div>     
+    </form> 
+
+    <div class="button-and-field" >
+      <div class="instruction">
+        Если страница отсканировалась не целиком, нажмите кнопку "сканировать 1500 строк". <br/>
+        Когда скан страницы загружен, то для распознания текста нажмите кнопку "распознать". <br/>
+        Это может занять несколько минут. <br/> <br/> 
+        И, наконец, используйте кнопку "создать урок", чтобы разделить текст на фрагменты, <br/> 
+        содержащие по тридцать новых слов. Каждый такой фрагмент будет снабжен <br/> 
+        контекстным словариком из тридцати слов с переводом. 
+      </div>
+      <div class="button-block-2">   
+        <div>
+          <button class="download-button" id="recoButton">
+            распознать
+          </button>          
+        </div>
+        <form action="/study" method="POST">        
+          <button class="download-button">
+            создать <br/> урок
+          </button> 
+        </form> 
+        <form action="/lesson" method="POST">        
+          <button class="download-button">
+            ваши уроки
+          </button> 
+        </form> 
+        <form action="/vocabulary" method="POST">        
+          <button class="download-button" id="vocaButton">
+            словарь
+          </button> 
+        </form> 
+      </div> 
+    </div> 
+
+    <img class="picture2" src="/cactusbrown9.png"> 
+    <div class="separating-line"> </div>        
+    
+    <div class="text-block" th:text="${content}" id="container" > </div> 
+    <img class="image-block" th:src="@{${imagePath}}" id="myImage" />     
+    <canvas class="hidden" width="0" height="0" id="hidden-canvas" > </canvas>  
+
+    <div id="theImage"> </div> 
+  </body>
+
+  <script> 
+    document.getElementById('recoButton').addEventListener('click', function () { 
+      const imageElement = document.getElementById('myImage'); 
+      const canvas = document.getElementById('hidden-canvas');
+
+      canvas.width = imageElement.naturalWidth;
+      canvas.height = imageElement.naturalHeight; 
+
+      const context = canvas.getContext('2d');
+      context.drawImage(imageElement, 0, 0); 
+
+      const imageDataUrl = canvas.toDataURL('image/png'); 
+      
+      $.ajax({
+        url: '/upload_image',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ imageBase64: imageDataUrl }),
+        success: function(response) {                   
+          window.location.href = '/text';
+        },
+        error: function(error) {
+          console.error('Ошибка:', error);
+        }
+      });  
+    }); 
+
+
+    document.getElementById('vocaButton').addEventListener('click', function() { 
+      const imgElement = new Image(); 
+      imgElement.classList.add('image-block');
+      imgElement.onload = function () {
+        const container = document.getElementById('theImage');
+        container.appendChild(imgElement);
+      };
+      imgElement.onerror = function () {
+        console.error("Ошибка загрузки изображения");
+      };
+      imgElement.src = '/screenshot.png';
+    }); 
+
+
+    /*
+    // скрипты выполняются на стороне браузера, поэтому этот скрипт не нужен
+    document.getElementById('theButton').addEventListener('click', function() { 
+      var block = document.getElementById('container');
+      fetch("Коллбэк1.txt") 
+        .then(res => res.text())
+        .then(html => block.innerText = html);
+        //.then(html => container.innerText = html);
+    });
+    */
+  </script>
+</html>

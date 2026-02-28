@@ -1,0 +1,144 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>reg new user</title> 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="icon" href="/favi.png" sizes="any" type="image/png"/> 
+    <style type="text/css">
+      body {
+        min-width: 460px; 
+        background: #FFDB89;
+        font-family: Helvetica;
+        /*overflow-x: hidden; */
+      } 
+      .reg { 
+        width: 30%; 
+        /*height: 70%; */
+        background: #FFF8CC;
+        color: rgba(128, 0, 0, 1); 
+        font-size: 17px; 
+        font-weight: bold;
+        text-align: center; 
+        box-shadow: 0 9px 10px rgba(0, 0, 0, 0.4); 
+        border-radius: 12px; 
+        padding: 20px 10px 10px 10px; 
+        margin: 50px auto 0 35%; 
+      } 
+      .header { 
+        height: 50px; 
+        padding: 5px 0px 0px 0px;
+      }
+      .naming-and-field { 
+        display: flex;  
+      }
+      .naming { 
+        width: 85px; 
+        margin: 10px 0 0 0; 
+      }
+      .field { 
+        width: 74%; 
+        height: 30px; 
+        font-size: 17px; 
+        margin: 0 0 8px 0;
+      }
+      .download-button { 
+        /*width: 250px; */ 
+        height: 38px; 
+        margin: 10px 0px 25px auto;       
+        padding: 10px 50px;
+        color: white;
+        border: none;
+        border-radius: 12px; 
+        font-size: 18px;
+        font-weight: bold;  
+        background-color: #4CAF50;                
+        position: relative;
+        top: 0;        
+        box-shadow: 0 5px 0 #2E7D32, 0 9px 10px rgba(0, 0, 0, 0.4);   
+        transition: all 0.1s ease; 
+      }
+      .download-button:active {
+        top: 5px; 
+        box-shadow: 0 0 0 #2E7D32, 0 0 5px rgba(0, 0, 0, 0.4);
+      }  
+      .string { 
+        font-size: 20px; 
+        margin: 0 0 8px 0; 
+      } 
+      .small-string { 
+        font-size: 17px; 
+        margin: 0 0 2px 0; 
+      }
+      .header-string { 
+        font-size: 17px; 
+        color: red; 
+        margin: 0 0 2px 0; 
+      }
+      @keyframes blink {
+        from { opacity: 1; }
+        to   { opacity: 0; }
+      }
+      .blink-twice {
+        animation-name: blink;
+        animation-duration: 0.5s;
+        animation-iteration-count: 4;
+        animation-direction: alternate;
+      }
+    </style>
+  </head>
+
+  <body> 
+    <div class="reg"> 
+      <div class="header">
+        <div class="header-string" th:if="${content != null && !#strings.isEmpty(content)}"  
+             th:id="'myDiv'" th:text="${content}">    
+        </div>
+        <div class="string" th:unless="${content != null && !#strings.isEmpty(content)}">
+          Ваши данные:
+        </div>
+      </div> 
+       
+      <form action="/createacc" method="post">    
+        <div class="naming-and-field">
+          <div class="naming"> Email: </div>
+          <input class="field" type="text" name="mail" required > <br> <br>
+        </div> 
+    
+        <div class="naming-and-field">
+          <div class="naming"> Имя: </div>
+          <input class="field" type="text" name="username" required > <br> <br>
+        </div> 
+
+        <div class="naming-and-field">
+          <div class="naming"> Пароль: </div>
+          <input class="field" type="text" name="pass" required > <br> <br>
+        </div> 
+        
+        <button class="download-button" type="submit">
+          создать аккаунт
+        </button> 
+      </form> 
+      
+      <br> <br>
+      <div class="small-string"> 
+        Передумали? 
+      </div> 
+      <form action="/index" method="get">  
+        <button class="download-button" type="submit">
+          вернуться на главную
+        </button>  
+      </form>       
+    </div>     
+  </body> 
+
+  <script type="text/javascript"> 
+      $(document).ready(function () {
+        // Получаем элемент div
+        var divElement = $('#myDiv');
+        
+        // Применяем эффект мигания при загрузке страницы
+        divElement.addClass('blink-twice');  
+      });
+  </script>
+</html>
