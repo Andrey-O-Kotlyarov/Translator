@@ -294,12 +294,27 @@ public class TranlatorController {
     }
 
 
-    //страница с уроками
+    //создание урока
     @PostMapping(value = "/study")
-    public ModelAndView getLessons() {   
+    public ModelAndView createLesson() {   
         
         System.out.println("controller /study started");                       
-        String insertingText = "здесь будут готовые уроки";
+        String insertingText = "здесь будет создаваться урок";
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("application4");
+        modelAndView.addObject("content", insertingText); 
+        modelAndView.addObject("user", nameOfCurrentUser); 
+        return modelAndView; 
+    }
+
+
+    //страница с уроками пользователя
+    @PostMapping(value = "/lessons")
+    public ModelAndView getLessons() {   
+        
+        System.out.println("controller /lessons started");                       
+        String insertingText = "здесь будут уроки пользователя";
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("application4");
@@ -308,5 +323,19 @@ public class TranlatorController {
         return modelAndView; 
     }
     
+
+    //пользовательский словарь
+    @PostMapping(value = "/vocabulary")
+    public ModelAndView getVocabulary() {   
+        
+        System.out.println("controller /vocabulary started");                       
+        String insertingText = "здесь будет пользовательский словарь";
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("application4");
+        modelAndView.addObject("content", insertingText); 
+        modelAndView.addObject("user", nameOfCurrentUser); 
+        return modelAndView; 
+    }
 
 }
