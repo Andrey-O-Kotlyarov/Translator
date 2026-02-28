@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <title>Application</title> 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="icon" href="/favi.png" sizes="any" type="image/png"/> 
+    <link rel="icon" href="/images/favi.png" sizes="any" type="image/png"/> 
     <style>
       body {
         min-width: 460px; 
@@ -211,7 +211,7 @@
     <div class="test"> 
     </div> 
 
-    <img class="picture" src="/giraftransparent.png"> 
+    <img class="picture" src="/images/giraftransparent.png"> 
     
     <form action="/index" method="GET">
       <button class="header" id="indexButton">
@@ -221,7 +221,7 @@
 
     <form class="button-block-3" action="/regform" method="GET">  
       <button class="registration">
-        <img class="login-avatar" src="/login-avatar.png">
+        <img class="login-avatar" src="/images/login-avatar.png">
         <div class="username-block">  
           <div th:if="${user != null && !#strings.isEmpty(user)}" th:text="${user}">    
           </div> 
@@ -286,7 +286,7 @@
       </div> 
     </div> 
 
-    <img class="picture2" src="/cactusbrown9.png"> 
+    <img class="picture2" src="/images/cactusbrown9.png"> 
     <div class="separating-line"> </div>        
     
     <div class="text-block" th:text="${content}" id="container" > </div> 

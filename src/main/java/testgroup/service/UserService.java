@@ -1,6 +1,6 @@
 package testgroup.service;
 
-import java.util.Optional; 
+import java.util.Optional;
 import testgroup.model.User;
 
 public interface UserService {
