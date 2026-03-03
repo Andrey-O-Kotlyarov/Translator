@@ -1,10 +1,13 @@
 package testgroup.contoller;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Base64;
-import java.util.Optional; 
+import java.util.Optional;
+import java.util.stream.Collectors; 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody; 
 import org.springframework.web.bind.annotation.RequestParam; 
 import org.springframework.web.servlet.ModelAndView; 
+import testgroup.dto.JsonDTO;
 import testgroup.model.User;
 import testgroup.service.FileTypeChecker;
 import testgroup.service.SelenScreener;
@@ -73,9 +77,45 @@ public class TranlatorController {
         modelAndView.addObject("imagePath", serverAccessToPictureFile); 
         modelAndView.addObject("user", nameOfCurrentUser); 
         return modelAndView; 
-    } 
-    
+    }     
 
+
+    //метод получения изображения 
+    @PostMapping(value = "/upload_image")
+    public ModelAndView handleImageUpload(@RequestBody JsonDTO request) throws Exception { 
+
+        System.out.println("controller /upload_image started"); 
+        String pictureForTess = "src\\main\\resources\\static\\pictureForTess.png"; 
+        
+        Path path = Paths.get(pictureForTess); 
+        try { 
+            Files.delete(path); 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }         
+        Files.createFile(path); 
+        
+        try {
+            // Отрезаем префикс "data:image/png;base64,"
+            String encodedImage = 
+                request.getContent().substring(request.getContent().indexOf(',')+1); 
+
+            // Декодируем base64 в массив байтов   
+            byte[] decodedBytes = Base64.getDecoder().decode(encodedImage);         
+            Files.write(path, decodedBytes);  
+        } catch (Exception e) {
+            System.out.println("хуйня какая-то"); 
+        }   
+        
+        //это все равно не отображается, вместо этого будет переход на /text
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("application4"); 
+        modelAndView.addObject("content", "Изображение успешно загружено"); 
+        modelAndView.addObject("user", nameOfCurrentUser); 
+        return modelAndView;         
+    }
+
+ 
     //переход на страницу с текстом
     @GetMapping(value = "/text")
     public ModelAndView showNewScreen() {  
@@ -111,55 +151,6 @@ public class TranlatorController {
         modelAndView.addObject("user", nameOfCurrentUser); 
         return modelAndView; 
     } 
-
-
-    //метод получения изображения 
-    @PostMapping("/upload_image")
-    public ModelAndView handleImageUpload(@RequestBody ImageDto request) throws Exception { 
-
-        System.out.println("controller /upload_image started"); 
-        String pictureForTess = "src\\main\\resources\\static\\pictureForTess.png"; 
-        
-        Path path = Paths.get(pictureForTess); 
-        try { 
-            Files.delete(path); 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }         
-        Files.createFile(path); 
-        
-        try {
-            // Отрезаем префикс "data:image/png;base64,"
-            String encodedImage = 
-                request.getImageBase64().substring(request.getImageBase64().indexOf(',')+1); 
-
-            // Декодируем base64 в массив байтов   
-            byte[] decodedBytes = Base64.getDecoder().decode(encodedImage);         
-            Files.write(path, decodedBytes);  
-        } catch (Exception e) {
-            System.out.println("хуйня какая-то"); 
-        }   
-        
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("application4"); 
-        modelAndView.addObject("content", "Изображение успешно загружено"); 
-        modelAndView.addObject("user", nameOfCurrentUser); 
-        return modelAndView;         
-    }
-
-    
-    //DTO для передачи изображения от клиента
-    static class ImageDto {
-        private String imageBase64;
-
-        public String getImageBase64() {
-            return imageBase64;
-        }
-
-        public void setImageBase64(String imageBase64) {
-            this.imageBase64 = imageBase64;
-        }
-    }
 
 
     //форма регистрации и входа
@@ -295,20 +286,61 @@ public class TranlatorController {
 
 
     //создание урока
-    @PostMapping(value = "/study")
-    public ModelAndView createLesson() {   
+    @PostMapping(value = "/createlesson")
+    public ModelAndView createLesson(@RequestBody JsonDTO request) throws Exception {   
         
-        System.out.println("controller /study started");                       
-        String insertingText = "здесь будет создаваться урок";
+        System.out.println("controller /createlesson started"); 
+        String textFromUser = "src\\main\\resources\\static\\textFromUser.txt"; 
+        
+        Path path = Paths.get(textFromUser); 
+        try { 
+            Files.delete(path); 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }         
+        Files.createFile(path); 
 
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("application4");
-        modelAndView.addObject("content", insertingText); 
+        String requestText = request.getContent(); 
+        try (BufferedWriter writer = Files.newBufferedWriter(path)) {
+            writer.write(requestText);
+            System.out.println("Файл записан успешно.");
+        } catch (IOException e) {
+            System.err.println("Ошибка при записи файла: " + e.getMessage());
+        } 
+        
+        //это все равно не будет показано, вместо этого будет переход на /showlesson
+        ModelAndView modelAndView = new ModelAndView(); 
+        modelAndView.setViewName("application4"); 
         modelAndView.addObject("user", nameOfCurrentUser); 
         return modelAndView; 
     }
 
 
+    //отображение созданного урока 
+    @GetMapping(value = "/showlesson")
+    public ModelAndView showLesson() {   
+        
+        System.out.println("controller /showlesson started");                       
+        String header = "исходный текст урока: " + "\n" + "\n"; 
+        String filePath = "src\\main\\resources\\static\\textFromUser.txt"; 
+        String content = "";
+
+        try {
+            content = Files
+                .lines(Paths.get(filePath))
+                .collect(Collectors.joining("\n")); 
+        } catch (IOException e) {
+            System.err.println("Ошибка при чтении файла: " + e.getMessage());
+        }
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("application4");
+        modelAndView.addObject("content", header + content); 
+        modelAndView.addObject("user", nameOfCurrentUser); 
+        return modelAndView; 
+    }
+
+  
     //страница с уроками пользователя
     @PostMapping(value = "/lessons")
     public ModelAndView getLessons() {   
@@ -337,5 +369,4 @@ public class TranlatorController {
         modelAndView.addObject("user", nameOfCurrentUser); 
         return modelAndView; 
     }
-
 }

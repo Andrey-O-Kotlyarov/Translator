@@ -26,6 +26,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> getUserById(Long id) { 
+        @SuppressWarnings("null")
         Optional<User> op = userRepository.findById(id); 
         return op;         
     }
