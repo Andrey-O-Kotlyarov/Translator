@@ -268,11 +268,11 @@
             распознать
           </button>          
         </div>
-        <form action="/study" method="POST">        
-          <button class="download-button">
+        <div>        
+          <button class="download-button" id="studyButton">
             создать <br/> урок
           </button> 
-        </form> 
+        </div> 
         <form action="/lessons" method="POST">        
           <button class="download-button">
             ваши уроки
@@ -297,6 +297,23 @@
   </body>
 
   <script> 
+    document.getElementById('studyButton').addEventListener('click', function () { 
+      var content = $("#container").text(); 
+
+      $.ajax({
+        url: "/createlesson",
+        type: "POST", 
+        contentType: 'application/json',
+        data: JSON.stringify({content: content}),
+        complete: function(){
+          window.location.href = '/showlesson'; 
+        }
+      });     
+    }); 
+
+    
+    
+    
     document.getElementById('recoButton').addEventListener('click', function () { 
       const imageElement = document.getElementById('myImage'); 
       const canvas = document.getElementById('hidden-canvas');
@@ -313,12 +330,9 @@
         url: '/upload_image',
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({ imageBase64: imageDataUrl }),
-        success: function(response) {                   
-          window.location.href = '/text';
-        },
-        error: function(error) {
-          console.error('Ошибка:', error);
+        data: JSON.stringify({ content: imageDataUrl }),
+        complete: function(){
+          window.location.href = '/text'; 
         }
       });  
     }); 
