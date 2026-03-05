@@ -20,6 +20,7 @@ import testgroup.model.User;
 import testgroup.service.FileTypeChecker;
 import testgroup.service.SelenScreener;
 import testgroup.service.TessRecognizer;
+import testgroup.service.TextFormater;
 import testgroup.service.UserService; 
 
 @Controller
@@ -27,6 +28,9 @@ public class TranlatorController {
     
     @Autowired
     private UserService userService;  
+
+    @Autowired
+    private TextFormater textFormater; 
     private String nameOfCurrentUser = ""; 
     
     
@@ -333,9 +337,11 @@ public class TranlatorController {
             System.err.println("Ошибка при чтении файла: " + e.getMessage());
         }
 
+        String contextVocabulary = textFormater.makeLesson(content, nameOfCurrentUser); 
+
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("application4");
-        modelAndView.addObject("content", header + content); 
+        modelAndView.addObject("content", contextVocabulary); 
         modelAndView.addObject("user", nameOfCurrentUser); 
         return modelAndView; 
     }

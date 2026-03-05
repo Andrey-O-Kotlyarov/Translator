@@ -33,4 +33,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Lesson> lessons; 
 
+    // Список слов, составляющих словарь этого пользователя
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Word> words; 
+    
+
 }
