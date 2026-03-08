@@ -26,23 +26,64 @@ public class TextFormater {
     public String makeLesson(String originText, String nameOfCurrentUser) {         
         String fragment = ""; 
         String contextVocabulary = ""; 
-        User currentUser = new User(); 
-        String[] words = originText.split("[\s\r\n]+"); 
+        String publication = ""; 
 
+        String[] words = originText.split("[\s\r\n]+"); 
         Optional<User> userOptional = userService.getUserByUsername(nameOfCurrentUser); 
-        if (userOptional.isPresent()) {
-                currentUser = userOptional.get(); 
-        } else { 
-            System.out.println("пользователь не найден"); 
+
+        // если пользователь не найден, то обращений к базе делать не будем,
+        // просто по-быстрому составляем контекстный словарь и возвращаем его: 
+        if (!userOptional.isPresent()) {
+            System.out.println("пользователь, для которого формируется урок, в базе не найден"); 
+            int counter = 0; 
+
+            for (String word : words) { 
+                String execWord = word
+                    .replaceAll("[\\p{Punct}\\s–—]+", " ")
+                    .trim() 
+                    .toLowerCase(); 
+                fragment = fragment + word + " "; 
+
+                if (!execWord.isBlank()) {
+                    String translatedWord = translate(execWord);                 
+                    contextVocabulary = contextVocabulary 
+                        + execWord + " " + " - " + " " + translatedWord + "\n"; 
+                } else {
+                    counter--; 
+                }
+                
+                if (counter < 30) {                     
+                    counter++; 
+                } else { 
+                    counter = 0; 
+                    publication = publication 
+                        + contextVocabulary + "\n" + "\n" 
+                        + fragment + "\n" + "\n" 
+                        + "===========================================================" 
+                        + "\n" + "\n"; 
+                    contextVocabulary = ""; 
+                    fragment = ""; 
+                }                
+            }
+            return publication; 
         }
+
+        // а если пользователь найден, то будем все новые слова добавлять в базу: 
+        User currentUser = userOptional.get();
 
         for (String word : words) { 
             word = word.replaceAll("[\\p{Punct}\\s–—]+", " ").trim(); 
             word = word.toLowerCase(); 
+            
+            Optional<Word> wordOp = Optional.empty(); 
+            try { 
+                wordOp = wordService.getWordByRusWordAndUser(word, currentUser); 
+            } catch (Exception e) { 
+                //e.printStackTrace(); 
+                System.out.println("какая-то проблема с поиском слова в базе");                     
+            }               
 
-            Optional<Word> op = wordService.getWordByRusWord(word); 
-
-            if (op.isPresent()) {
+            if (wordOp.isPresent()) {
                 fragment = fragment + word + " "; 
             } else {
                 fragment = fragment + word + " "; 
@@ -50,16 +91,20 @@ public class TextFormater {
                 try {
                     wordService.createWord(word, translatedWord, currentUser); 
                 } catch (Exception e) { 
-                    e.printStackTrace(); 
-                    //System.out.println("какая-то проблема с сохранением слова в базу");                     
+                    //e.printStackTrace(); 
+                    System.out.println("какая-то проблема с сохранением слова в базу");                     
                 }   
-                contextVocabulary = contextVocabulary + word + "  -  " + translatedWord + "\n"; 
+                contextVocabulary = 
+                    contextVocabulary + word + " " + " - " + " " + translatedWord + "\n"; 
             } 
         } 
+        
+        if (contextVocabulary.isBlank()) { 
+            return "все слова из переданного текста уже есть в словаре данного пользователя"; 
+        }
 
         String result = contextVocabulary; 
         return result; 
-        
     }
 
 }

@@ -7,4 +7,5 @@ import testgroup.model.Word;
 public interface WordService { 
     public Long createWord(String rusWord, String engWord, User user); 
     public Optional<Word> getWordByRusWord (String rusWord); 
+    public Optional<Word> getWordByRusWordAndUser (String rusWord, User user); 
 }

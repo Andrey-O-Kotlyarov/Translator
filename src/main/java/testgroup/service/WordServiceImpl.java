@@ -30,4 +30,10 @@ public class WordServiceImpl implements WordService {
         Optional<Word> op = wordRepository.findByRusWord(rusWord);          
         return op; 
     } 
+
+    @Override
+    public Optional<Word> getWordByRusWordAndUser (String rusWord, User user) {
+        Optional<Word> op = wordRepository.findByRusWordAndUser(rusWord, user); 
+        return op; 
+    }
 } 
