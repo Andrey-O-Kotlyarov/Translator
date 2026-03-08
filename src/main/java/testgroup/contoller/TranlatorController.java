@@ -325,7 +325,7 @@ public class TranlatorController {
     public ModelAndView showLesson() {   
         
         System.out.println("controller /showlesson started");                       
-        String header = "исходный текст урока: " + "\n" + "\n"; 
+        //String header = "исходный текст урока: " + "\n" + "\n"; 
         String filePath = "src\\main\\resources\\static\\textFromUser.txt"; 
         String content = "";
 
