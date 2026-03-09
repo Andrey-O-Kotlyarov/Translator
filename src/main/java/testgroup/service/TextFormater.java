@@ -52,7 +52,7 @@ public class TextFormater {
                     counter--; 
                 }
                 
-                if (counter < 30) {                     
+                if (counter < 29) {                     
                     counter++; 
                 } else { 
                     counter = 0; 
@@ -70,14 +70,17 @@ public class TextFormater {
 
         // а если пользователь найден, то будем все новые слова добавлять в базу: 
         User currentUser = userOptional.get();
+        int counter = 0; 
 
         for (String word : words) { 
-            word = word.replaceAll("[\\p{Punct}\\s–—]+", " ").trim(); 
-            word = word.toLowerCase(); 
+            String execWord = word
+                    .replaceAll("[\\p{Punct}\\s–—]+", " ")
+                    .trim() 
+                    .toLowerCase();             
             
             Optional<Word> wordOp = Optional.empty(); 
             try { 
-                wordOp = wordService.getWordByRusWordAndUser(word, currentUser); 
+                wordOp = wordService.getWordByRusWordAndUser(execWord, currentUser); 
             } catch (Exception e) { 
                 //e.printStackTrace(); 
                 System.out.println("какая-то проблема с поиском слова в базе");                     
@@ -85,25 +88,42 @@ public class TextFormater {
 
             if (wordOp.isPresent()) {
                 fragment = fragment + word + " "; 
-            } else {
+            } else { 
+                counter++; 
                 fragment = fragment + word + " "; 
-                String translatedWord = translate(word); 
+                String translatedWord = translate(execWord); 
                 try {
-                    wordService.createWord(word, translatedWord, currentUser); 
+                    wordService.createWord(execWord, translatedWord, currentUser); 
                 } catch (Exception e) { 
                     //e.printStackTrace(); 
                     System.out.println("какая-то проблема с сохранением слова в базу");                     
                 }   
                 contextVocabulary = 
-                    contextVocabulary + word + " " + " - " + " " + translatedWord + "\n"; 
+                    contextVocabulary + execWord + " " + " - " + " " + translatedWord + "\n"; 
+            } 
+
+            if (counter > 29 && (
+                    word.endsWith(".") || 
+                    word.endsWith("!") || 
+                    word.endsWith("?") || 
+                    word.endsWith("...")            
+                )) { 
+                counter = 0; 
+                publication = publication 
+                    + contextVocabulary + "\n" + "\n" 
+                    + fragment + "\n" + "\n" 
+                    + "===========================================================" 
+                    + "\n" + "\n"; 
+                contextVocabulary = ""; 
+                fragment = ""; 
             } 
         } 
         
-        if (contextVocabulary.isBlank()) { 
+        if (publication.isBlank()) { 
             return "все слова из переданного текста уже есть в словаре данного пользователя"; 
         }
 
-        String result = contextVocabulary; 
+        String result = publication; 
         return result; 
     }
 
