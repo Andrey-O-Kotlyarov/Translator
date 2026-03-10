@@ -295,6 +295,20 @@
     <canvas class="hidden" width="0" height="0" id="hidden-canvas" > </canvas>  
 
     <div id="theImage"> </div> 
+
+    <table> 
+      <div th:each = "word : ${words}"> 
+        <tr> 
+          <td th:text="${word.rusWord}"> </td>
+          <td th:text="${word.engWord}"> </td> 
+          <td>
+            <a th:href="@{/delete/{id}(id=${word.id})}">
+              удалить
+            </a>
+          </td>
+        </tr>
+      </div> 
+    </table>
   </body>
 
   <script> 
@@ -351,7 +365,6 @@
       };
       imgElement.src = '/screenshot.png';
     }); 
-
 
     /*
     // скрипты выполняются на стороне браузера, поэтому этот скрипт не нужен

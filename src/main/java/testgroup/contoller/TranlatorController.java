@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors; 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView; 
 import testgroup.dto.JsonDTO;
 import testgroup.model.User;
+import testgroup.model.Word;
 import testgroup.service.FileTypeChecker;
 import testgroup.service.SelenScreener;
 import testgroup.service.TessRecognizer;
@@ -367,12 +369,18 @@ public class TranlatorController {
     public ModelAndView getVocabulary() {   
         
         System.out.println("controller /vocabulary started");                       
-        String insertingText = "здесь будет пользовательский словарь";
+        //String insertingText = "здесь будет пользовательский словарь"; 
+        //String vocabulary = textFormater.showVocabulary(nameOfCurrentUser); 
+        List<Word> list = textFormater.showVocabularyAsTable(nameOfCurrentUser); 
+        
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("application4");
-        modelAndView.addObject("content", insertingText); 
+        //modelAndView.addObject("content", vocabulary); 
+        modelAndView.addObject("words", list);
         modelAndView.addObject("user", nameOfCurrentUser); 
         return modelAndView; 
     }
-}
+
+
+} 
