@@ -19,7 +19,11 @@ public class Lesson {
     // Идентификатор урока
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id; 
+
+    // номер урока для данного пользователя 
+    @Column(nullable = false)
+    private Long number; 
 
     // Название урока
     @Column(nullable = false)
@@ -33,9 +37,4 @@ public class Lesson {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user; 
-
-
-
-
-
-}
+} 

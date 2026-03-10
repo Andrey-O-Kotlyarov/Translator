@@ -2,7 +2,9 @@ package testgroup.service;
 
 import java.util.Optional; 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service; 
+import org.springframework.stereotype.Service;
+
+import testgroup.model.Lesson;
 import testgroup.model.User;
 import testgroup.model.Word; 
 
@@ -13,7 +15,10 @@ public class TextFormater {
     private WordService wordService;  
     
     @Autowired
-    private UserService userService;
+    private UserService userService; 
+
+    @Autowired
+    private LessonService lessonService; 
 
     // временная заглушка для метода перевода слов
     public String translate(String wordForTranslating) {
@@ -22,11 +27,12 @@ public class TextFormater {
     }
 
 
-    // метод для составления урока 
+    // метод для составления текста урока 
     public String makeLesson(String originText, String nameOfCurrentUser) {         
         String fragment = ""; 
         String contextVocabulary = ""; 
         String publication = ""; 
+        String title = ""; 
 
         String[] words = originText.split("[\s\r\n]+"); 
         Optional<User> userOptional = userService.getUserByUsername(nameOfCurrentUser); 
@@ -71,12 +77,18 @@ public class TextFormater {
         // а если пользователь найден, то будем все новые слова добавлять в базу: 
         User currentUser = userOptional.get();
         int counter = 0; 
+        int titleCounter = 0; 
 
         for (String word : words) { 
             String execWord = word
                     .replaceAll("[\\p{Punct}\\s–—]+", " ")
                     .trim() 
-                    .toLowerCase();             
+                    .toLowerCase();    
+                    
+            if (titleCounter < 8) {
+                title = title + word + " "; 
+                titleCounter++; 
+            }
             
             Optional<Word> wordOp = Optional.empty(); 
             try { 
@@ -123,8 +135,38 @@ public class TextFormater {
             return "все слова из переданного текста уже есть в словаре данного пользователя"; 
         }
 
-        String result = publication; 
+        String result = addLessonToBase(title, publication, currentUser); 
+
+        //String result = publication; 
         return result; 
+    } 
+
+
+    // метод для добавления созданного урока в базу 
+    private String addLessonToBase(String title, String publication, User user) { 
+        Long numberOfNewLesson; 
+
+        Optional<Lesson> lessonOp = lessonService.getLatestLessonForUser(user); 
+        if (lessonOp.isPresent()) {
+            Lesson latestLesson = lessonOp.get(); 
+            Long number = latestLesson.getNumber(); 
+            numberOfNewLesson = number + 1;             
+        } else { 
+            numberOfNewLesson = 1L; 
+        }
+        
+        String newLesson = 
+            "Урок № " + numberOfNewLesson + 
+            " пользователя " + user.getUsername() + 
+            "\n" + "\n" + "\n" + publication; 
+
+        try {
+            lessonService.createLesson(numberOfNewLesson, title, newLesson, user); 
+        } catch (Exception e) {
+            System.out.println("при создании урока что-то пошло не так"); 
+        }
+
+        return newLesson; 
     }
 
 }

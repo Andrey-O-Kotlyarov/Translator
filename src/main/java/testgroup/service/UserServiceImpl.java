@@ -24,6 +24,7 @@ public class UserServiceImpl implements UserService {
         return id; 
     }
 
+    
     @Override
     public Optional<User> getUserById(Long id) { 
         @SuppressWarnings("null")
