@@ -1,5 +1,6 @@
 package testgroup.service;
 
+import java.util.List;
 import java.util.Optional; 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service; 
@@ -37,4 +38,24 @@ public class LessonServiceImpl implements LessonService {
     public Optional<Lesson> getLatestLessonForUserId(Long userId) {
         return lessonRepository.findTopByUser_IdOrderByNumberDesc(userId);
     } 
+
+
+    @Override
+    public List<Lesson> getAllLessonsForUser(User user) {
+        return lessonRepository.findAllByUser(user);
+    }
+
+
+    @Override
+    public List<Lesson> getAllLessonsForUserId(Long userId) {
+        return lessonRepository.findAllByUser_Id(userId);
+    }
+
+
+    @Override
+    @SuppressWarnings("null")
+    public void deleteLesson(Long id) {
+        lessonRepository.deleteById(id);
+    }
+
 } 

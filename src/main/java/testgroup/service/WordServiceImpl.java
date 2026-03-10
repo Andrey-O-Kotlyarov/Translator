@@ -1,9 +1,10 @@
 package testgroup.service;
 
+import java.util.List;
 import java.util.Optional; 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service; 
-import testgroup.dao.WordRepository;
+import testgroup.dao.WordRepository; 
 import testgroup.model.User;
 import testgroup.model.Word;
 
@@ -36,4 +37,25 @@ public class WordServiceImpl implements WordService {
         Optional<Word> op = wordRepository.findByRusWordAndUser(rusWord, user); 
         return op; 
     }
+
+
+    @Override
+    public List<Word> getAllWordsForUser(User user) {
+        return wordRepository.findAllByUser(user);
+    }
+
+
+    @Override
+    public List<Word> getAllWordsForUserId(Long userId) {
+        return wordRepository.findAllByUser_Id(userId);
+    }  
+
+
+    @Override
+    @SuppressWarnings("null")
+    public void deleteWord(Long id) {
+        wordRepository.deleteById(id);
+    }
+
+
 } 

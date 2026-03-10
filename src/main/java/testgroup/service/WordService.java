@@ -1,5 +1,6 @@
 package testgroup.service;
 
+import java.util.List;
 import java.util.Optional; 
 import testgroup.model.User;
 import testgroup.model.Word;
@@ -8,4 +9,9 @@ public interface WordService {
     public Long createWord(String rusWord, String engWord, User user); 
     public Optional<Word> getWordByRusWord (String rusWord); 
     public Optional<Word> getWordByRusWordAndUser (String rusWord, User user); 
-}
+    public List<Word> getAllWordsForUser(User user); 
+    public List<Word> getAllWordsForUserId(Long userId); 
+    public void deleteWord(Long id); 
+
+
+} 
