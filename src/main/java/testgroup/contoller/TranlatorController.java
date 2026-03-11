@@ -12,10 +12,12 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody; 
 import org.springframework.web.bind.annotation.RequestParam; 
 import org.springframework.web.servlet.ModelAndView; 
+import jakarta.servlet.http.HttpSession;
 import testgroup.dto.JsonDTO;
 import testgroup.model.User;
 import testgroup.model.Word;
@@ -23,7 +25,8 @@ import testgroup.service.FileTypeChecker;
 import testgroup.service.SelenScreener;
 import testgroup.service.TessRecognizer;
 import testgroup.service.TextFormater;
-import testgroup.service.UserService; 
+import testgroup.service.UserService;
+import testgroup.service.WordService; 
 
 @Controller
 public class TranlatorController { 
@@ -32,7 +35,11 @@ public class TranlatorController {
     private UserService userService;  
 
     @Autowired
+    private WordService wordService; 
+
+    @Autowired
     private TextFormater textFormater; 
+    
     private String nameOfCurrentUser = ""; 
     
     
@@ -372,7 +379,7 @@ public class TranlatorController {
         //String insertingText = "здесь будет пользовательский словарь"; 
         //String vocabulary = textFormater.showVocabulary(nameOfCurrentUser); 
         List<Word> list = textFormater.showVocabularyAsTable(nameOfCurrentUser); 
-        
+
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("application4");
@@ -380,7 +387,37 @@ public class TranlatorController {
         modelAndView.addObject("words", list);
         modelAndView.addObject("user", nameOfCurrentUser); 
         return modelAndView; 
+    } 
+
+
+    //удаление слова 
+    @PostMapping(value = "/delete/{id}")
+    public ModelAndView deleteWord(
+            @PathVariable Long id, 
+            @RequestParam("scrollPosition") String position) { 
+                
+        System.out.println("controller /delete started");         
+        System.out.println("позиция прокрутки " + position); 
+        
+        int number = 1; 
+        try {
+            number = Integer.parseInt(position); 
+        } catch(NumberFormatException e) {
+            System.out.println("Строка не является числом"); 
+            //e.printStackTrace();
+        } 
+       
+        wordService.deleteWord(id); 
+        List<Word> list = textFormater.showVocabularyAsTable(nameOfCurrentUser); 
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("application4"); 
+        modelAndView.addObject("words", list); 
+        modelAndView.addObject("scrollInfo", number);
+        modelAndView.addObject("user", nameOfCurrentUser); 
+        return modelAndView; 
     }
+    
 
 
 } 
