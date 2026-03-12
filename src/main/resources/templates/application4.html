@@ -9,7 +9,7 @@
       body {
         min-width: 460px; 
         background: #FFF8CC;
-        font-family: Helvetica;
+        font-family: Helvetica; 
         /*overflow-x: hidden; */
       } 
       .test {
@@ -204,7 +204,28 @@
       } 
       .hidden {
         display: none; 
+      } 
+      .vocabulary {
+        color: rgba(128, 0, 0, 1);   
+        font-size: 17px; 
+        font-weight: bold;   
+        margin: -50px auto 50px 120px; 
+        /*text-align: center; */
+      } 
+      .column { 
+        width: 250px; 
+      } 
+      .delete { 
+        background: #FFF8CC; 
+        color: rgba(0, 0, 0, 0.5); 
+        border: none;   
+        font-size: 14px; 
+        font-weight: bold;   
       }
+      .delete:hover {         
+        border: none; 
+        color: rgba(128, 0, 0, 1);  
+      }    
     </style>
   </head>
 
@@ -296,22 +317,49 @@
 
     <div id="theImage"> </div> 
 
-    <table> 
-      <div th:each = "word : ${words}"> 
-        <tr> 
-          <td th:text="${word.rusWord}"> </td>
-          <td th:text="${word.engWord}"> </td> 
-          <td>
-            <a th:href="@{/delete/{id}(id=${word.id})}">
+    <table class="vocabulary">        
+        <tr th:each = "word : ${words}"> 
+          <td class="column" th:text="${word.rusWord}"> </td>
+          <td class="column" th:text="${word.engWord}"> </td> 
+          <td>    
+            <button class="delete" th:attr="onclick='handleDelete(' + ${word.id} + '); return false;'"> 
               удалить
-            </a>
+            </button>             
           </td>
-        </tr>
-      </div> 
+        </tr>         
     </table>
+
+    <div style="display:none;" th:text="${scrollInfo}" id="scroll"> </div>
+
+    <div style="display:none;"> 
+      <form action="/delete/" method="post" id="deleteForm">
+        <input type="hidden" name="scrollPosition" id="scrollPositionInput" value=""/>         
+      </form>
+    </div> 
   </body>
 
-  <script> 
+  <script>      
+    function handleDelete(wordId) {
+      let form = document.getElementById('deleteForm');  
+      form.action = '/delete/' + wordId; 
+      document.getElementById('scrollPositionInput').value = window.scrollY;       
+      form.submit();
+    }        
+    
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var lastScrollPosition = document.getElementById('scroll').textContent.trim();
+      window.scrollTo({ top: parseInt(lastScrollPosition), behavior: 'auto' });
+    });     
+
+    /*
+    $(document).ready(function() { 
+      var lastScrollPosition = $('#scroll').text().trim(); 
+      lastScrollPosition = parseInt(lastScrollPosition); 
+      $(window).scrollTop(lastScrollPosition); 
+    }); 
+    */
+
     document.getElementById('studyButton').addEventListener('click', function () { 
       var content = $("#container").text(); 
 
@@ -324,9 +372,7 @@
           window.location.href = '/showlesson'; 
         }
       });     
-    }); 
-
-    
+    });     
     
     
     document.getElementById('recoButton').addEventListener('click', function () { 
