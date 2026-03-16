@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody; 
 import org.springframework.web.bind.annotation.RequestParam; 
 import org.springframework.web.servlet.ModelAndView; 
-import jakarta.servlet.http.HttpSession;
 import testgroup.dto.JsonDTO;
 import testgroup.model.User;
 import testgroup.model.Word;
@@ -171,7 +170,6 @@ public class TranlatorController {
     public ModelAndView getUserName() {   
         
         System.out.println("controller /regform started");  
-
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("regform"); 
         return modelAndView; 
@@ -184,16 +182,11 @@ public class TranlatorController {
             @RequestParam("username") String username,
             @RequestParam("pass") String pass) {   
         
-        System.out.println("controller /olduser started");  
-        String name = username; 
-        String password = pass; 
+        System.out.println("controller /olduser started"); 
+        Optional<User> userInBaseOp = 
+            userService.getUserByUsernameAndPass(username, pass); 
 
-        //делаем поиск по имени и паролю сразу
-        Optional<User> userOptional = userService.getUserByUsernameAndPass(name, password); 
-
-        if (userOptional.isPresent()) {
-            System.out.println("Пользователь найден в базе" );
-        } else {
+        if (!userInBaseOp.isPresent()) { 
             System.out.println("Пользователь не найден в базе"); 
 
             ModelAndView modelAndView = new ModelAndView(); 
@@ -202,13 +195,12 @@ public class TranlatorController {
             return modelAndView;
         } 
 
-        User registredUser = userOptional.get(); 
-        String nameOfRegistredUser = registredUser.getUsername(); 
-        nameOfCurrentUser = nameOfRegistredUser; 
-
-        ModelAndView modelAndView = new ModelAndView();            
+        nameOfCurrentUser = userInBaseOp.get().getUsername(); 
+        System.out.println("Пользователь " + nameOfCurrentUser + " найден в базе" );
+          
+        ModelAndView modelAndView = new ModelAndView(); 
         modelAndView.setViewName("application4"); 
-        modelAndView.addObject("content", "Добро пожаловать, " + nameOfRegistredUser + "!"); 
+        modelAndView.addObject("content", "Добро пожаловать, " + nameOfCurrentUser + "!"); 
         modelAndView.addObject("user", nameOfCurrentUser); 
         return modelAndView; 
     } 
@@ -219,7 +211,6 @@ public class TranlatorController {
     public ModelAndView doNewUserIn() {   
         
         System.out.println("controller /newuser started");  
-
         ModelAndView modelAndView = new ModelAndView();            
         modelAndView.setViewName("regnewuser"); 
         return modelAndView; 
@@ -235,18 +226,8 @@ public class TranlatorController {
         
         System.out.println("controller /createacc started"); 
         Long id; 
-        ModelAndView modelAndView = new ModelAndView();         
+        ModelAndView modelAndView = new ModelAndView();  
 
-        /*Сохраняем пользователя в базе данных. Этот метод делает следующее: 
-          - создает новую энтити класса Юзер 
-          - заполняет ее поля мейлом, юзернеймом и паролем 
-          - вызывает у JpaRepository метод save 
-          При этом используются классы: 
-          - Юзер - это энтити, 
-          - JpaRepository - набор методов для переноса энтити в базу и обратно, 
-          - ЮзерСервис - его метод вызывает метод Jpa репозитория, а перед этим 
-            создает и заполняет энтити для прередачи в метод репозитория 
-        */
         try {
             id = userService.createUser(mail, username, pass); 
         } catch (Exception e) {
@@ -257,26 +238,20 @@ public class TranlatorController {
             return modelAndView;
         }          
 
-        Optional<User> userOptional = userService.getUserById(id); 
-        if (userOptional.isPresent()) {
-            System.out.println("Новый пользователь внесен в базу" );
-        } else {
+        Optional<User> userInBaseOp = userService.getUserById(id); 
+        if (!userInBaseOp.isPresent()) { 
             System.out.println("При регистрации что-то пошло не так"); 
 
             modelAndView.setViewName("regnewuser");             
             modelAndView.addObject("content", "При регистрации что-то пошло не так");
             return modelAndView;
         } 
+       
+        nameOfCurrentUser = userInBaseOp.get().getUsername(); 
+        System.out.println("Новый пользователь " + nameOfCurrentUser + " внесен в базу" );
 
-        User registredUser = userOptional.get(); 
-        String nameOfRegistredUser = registredUser.getUsername(); 
-        nameOfCurrentUser = nameOfRegistredUser; 
-
-        // Перенаправляем на страницу успеха
-        //return "redirect:/success";         
-        
         modelAndView.setViewName("application4"); 
-        modelAndView.addObject("content", "Добро пожаловать, " + nameOfRegistredUser + "!"); 
+        modelAndView.addObject("content", "Добро пожаловать, " + nameOfCurrentUser + "!"); 
         modelAndView.addObject("user", nameOfCurrentUser); 
         return modelAndView;
     }
@@ -316,7 +291,7 @@ public class TranlatorController {
         String requestText = request.getContent(); 
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             writer.write(requestText);
-            System.out.println("Файл записан успешно.");
+            System.out.println("Файл записан успешно ");
         } catch (IOException e) {
             System.err.println("Ошибка при записи файла: " + e.getMessage());
         } 
@@ -333,8 +308,7 @@ public class TranlatorController {
     @GetMapping(value = "/showlesson")
     public ModelAndView showLesson() {   
         
-        System.out.println("controller /showlesson started");                       
-        //String header = "исходный текст урока: " + "\n" + "\n"; 
+        System.out.println("controller /showlesson started");  
         String filePath = "src\\main\\resources\\static\\textFromUser.txt"; 
         String content = "";
 
@@ -346,11 +320,11 @@ public class TranlatorController {
             System.err.println("Ошибка при чтении файла: " + e.getMessage());
         }
 
-        String contextVocabulary = textFormater.makeLesson(content, nameOfCurrentUser); 
+        String lesson = textFormater.makeLesson(content, nameOfCurrentUser); 
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("application4");
-        modelAndView.addObject("content", contextVocabulary); 
+        modelAndView.addObject("content", lesson); 
         modelAndView.addObject("user", nameOfCurrentUser); 
         return modelAndView; 
     }
@@ -375,15 +349,11 @@ public class TranlatorController {
     @PostMapping(value = "/vocabulary")
     public ModelAndView getVocabulary() {   
         
-        System.out.println("controller /vocabulary started");                       
-        //String insertingText = "здесь будет пользовательский словарь"; 
-        //String vocabulary = textFormater.showVocabulary(nameOfCurrentUser); 
+        System.out.println("controller /vocabulary started");  
         List<Word> list = textFormater.showVocabularyAsTable(nameOfCurrentUser); 
 
-
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("application4");
-        //modelAndView.addObject("content", vocabulary); 
+        modelAndView.setViewName("application4");     
         modelAndView.addObject("words", list);
         modelAndView.addObject("user", nameOfCurrentUser); 
         return modelAndView; 
@@ -404,7 +374,6 @@ public class TranlatorController {
             number = Integer.parseInt(position); 
         } catch(NumberFormatException e) {
             System.out.println("Строка не является числом"); 
-            //e.printStackTrace();
         } 
        
         wordService.deleteWord(id); 
@@ -416,8 +385,5 @@ public class TranlatorController {
         modelAndView.addObject("scrollInfo", number);
         modelAndView.addObject("user", nameOfCurrentUser); 
         return modelAndView; 
-    }
-    
-
-
+    } 
 } 
