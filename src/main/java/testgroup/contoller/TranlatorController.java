@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors; 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -94,7 +95,7 @@ public class TranlatorController {
 
     //метод получения изображения 
     @PostMapping(value = "/upload_image")
-    public ModelAndView handleImageUpload(@RequestBody JsonDTO request) throws Exception { 
+    public ResponseEntity<String> handleImageUpload(@RequestBody JsonDTO request) throws Exception { 
 
         System.out.println("controller /upload_image started"); 
         String pictureForTess = "src\\main\\resources\\static\\pictureForTess.png"; 
@@ -119,12 +120,8 @@ public class TranlatorController {
             System.out.println("хуйня какая-то"); 
         }   
         
-        //это все равно не отображается, вместо этого будет переход на /text
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("application4"); 
-        modelAndView.addObject("content", "Изображение успешно загружено"); 
-        modelAndView.addObject("user", nameOfCurrentUser); 
-        return modelAndView;         
+        //это все равно не отображается, вместо этого будет переход на /text 
+        return ResponseEntity.ok("ok");      
     }
 
  
@@ -275,7 +272,7 @@ public class TranlatorController {
 
     //создание урока
     @PostMapping(value = "/createlesson")
-    public ModelAndView createLesson(@RequestBody JsonDTO request) throws Exception {   
+    public ResponseEntity<String> createLesson(@RequestBody JsonDTO request) throws Exception {   
         
         System.out.println("controller /createlesson started"); 
         String textFromUser = "src\\main\\resources\\static\\textFromUser.txt"; 
@@ -296,11 +293,8 @@ public class TranlatorController {
             System.err.println("Ошибка при записи файла: " + e.getMessage());
         } 
         
-        //это все равно не будет показано, вместо этого будет переход на /showlesson
-        ModelAndView modelAndView = new ModelAndView(); 
-        modelAndView.setViewName("application4"); 
-        modelAndView.addObject("user", nameOfCurrentUser); 
-        return modelAndView; 
+        //это все равно не будет показано, вместо этого будет переход на /showlesson 
+        return ResponseEntity.ok("ok");      
     }
 
 
