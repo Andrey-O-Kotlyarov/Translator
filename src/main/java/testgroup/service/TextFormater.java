@@ -144,6 +144,122 @@ public class TextFormater {
     } 
 
 
+    /*     
+    // метод для составления текста урока 
+    public String makeLesson(String originText, String nameOfCurrentUser) {         
+        String fragment = ""; 
+        String contextVocabulary = ""; 
+        String publication = ""; 
+        String title = ""; 
+        int lengthOfTitle = 8; 
+        int lengthOfContextVocabulary = 30; 
+
+        String[] words = originText.split("[\s\r\n]+"); 
+        Optional<User> userOptional = userService.getUserByUsername(nameOfCurrentUser); 
+
+        // если пользователь не найден, то обращений к базе делать не будем,
+        // просто по-быстрому составляем контекстный словарь и возвращаем его: 
+        if (!userOptional.isPresent()) {
+            System.out.println("пользователь, для которого формируется урок, в базе не найден"); 
+            int counter = 0; 
+
+            for (String word : words) { 
+                String execWord = word
+                    .replaceAll("[\\p{Punct}\\s–—]+", " ")
+                    .trim() 
+                    .toLowerCase(); 
+                fragment = fragment + word + " "; 
+
+                if (!execWord.isBlank()) {
+                    String translatedWord = translate(execWord);                 
+                    contextVocabulary = contextVocabulary 
+                        + execWord + " " + " - " + " " + translatedWord + "\n"; 
+                } else {
+                    counter--; 
+                }
+                
+                if (counter < 29) {                     
+                    counter++; 
+                } else { 
+                    counter = 0; 
+                    publication = publication 
+                        + contextVocabulary + "\n" + "\n" 
+                        + fragment + "\n" + "\n" 
+                        + "===========================================================" 
+                        + "\n" + "\n"; 
+                    contextVocabulary = ""; 
+                    fragment = ""; 
+                }                
+            }
+            return publication; 
+        }
+
+        // а если пользователь найден, то будем все новые слова добавлять в базу: 
+        User currentUser = userOptional.get();
+        int contextVocCounter = 0; 
+        int titleCounter = 0; 
+
+        for (String word : words) { 
+            String execWord = word
+                    .replaceAll("[\\p{Punct}\\s–—]+", " ")
+                    .trim() 
+                    .toLowerCase();    
+                    
+            fragment = fragment + word + " "; 
+
+            if (titleCounter < lengthOfTitle) {
+                title = title + word + " "; 
+                titleCounter++; 
+            }
+            
+            Optional<Word> wordInBaseOp = Optional.empty(); 
+            try { 
+                wordInBaseOp = wordService.getWordByRusWordAndUser(execWord, currentUser); 
+            } catch (Exception e) { 
+                //e.printStackTrace(); 
+                System.out.println("какая-то проблема с поиском слова в базе");                     
+            }               
+
+            if (!wordInBaseOp.isPresent()) {
+                contextVocCounter++; 
+                String translatedWord = translate(execWord); 
+                try {
+                    wordService.createWord(execWord, translatedWord, currentUser); 
+                } catch (Exception e) { 
+                    //e.printStackTrace(); 
+                    System.out.println("какая-то проблема с сохранением слова в базу");                     
+                }   
+                contextVocabulary = 
+                    contextVocabulary + execWord + " - " + translatedWord + "\n"; 
+            } 
+
+            if (contextVocCounter >= lengthOfContextVocabulary && (
+                    word.endsWith(".") || 
+                    word.endsWith("!") || 
+                    word.endsWith("?") || 
+                    word.endsWith("...")            
+                )) { 
+                contextVocCounter = 0; 
+                publication = publication 
+                    + contextVocabulary + "\n\n" 
+                    + fragment + "\n\n" 
+                    + "===========================================================" 
+                    + "\n\n"; 
+                contextVocabulary = ""; 
+                fragment = ""; 
+            } 
+        } 
+        
+        if (publication.isBlank()) { 
+            return "все слова из переданного текста уже есть в словаре данного пользователя"; 
+        }
+
+        String result = addLessonToBase(title, publication, currentUser); 
+        return result; 
+    } 
+    */
+
+
     // метод для добавления созданного урока в базу 
     private String addLessonToBase(String title, String publication, User user) { 
         System.out.println("method addLessonToBase() started");

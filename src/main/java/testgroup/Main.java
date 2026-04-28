@@ -2,7 +2,8 @@ package testgroup;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication; 
-import testgroup.service.FileCleaner; 
+import testgroup.service.FileCleaner;
+import testgroup.service.YandexIAMTokenGen;
 
 @SpringBootApplication
 public class Main {
@@ -15,5 +16,12 @@ public class Main {
         "C:\\Users\\admin\\Desktop\\translator\\src\\main\\resources\\static\\screens";
         int periodInMinutes = 30; 
         FileCleaner.startFileCleaning(folderPath, periodInMinutes); 
+
+        try {
+            YandexIAMTokenGen.gener(); 
+        } catch (Exception e) {
+            e.printStackTrace();
+        } 
+
     } 
 } 
