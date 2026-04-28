@@ -71,7 +71,7 @@ public class YandexIAMTokenGen {
             // 1. Создаем URL и открываем соединение
             URL url = new URL(
                 "https://translate.api.cloud.yandex.net/translate/v2/translate");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection(); 
     
             // 2. Настраиваем соединение
             connection.setRequestMethod("POST");
