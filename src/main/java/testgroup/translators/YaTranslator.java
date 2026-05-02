@@ -1,4 +1,4 @@
-package testgroup.service; 
+package testgroup.translators; 
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.DataOutputStream;

@@ -41,6 +41,7 @@ public class TextFormater {
 
         String[] words = originText.split("[\s\r\n]+"); 
         Optional<User> userOptional = userService.getUserByUsername(nameOfCurrentUser); 
+        String part = ""; 
 
         // если пользователь не найден, то обращений к базе делать не будем,
         // просто по-быстрому составляем контекстный словарь и возвращаем его: 
@@ -107,15 +108,7 @@ public class TextFormater {
 
             if (!wordInBaseOp.isPresent()) {
                 contextVocCounter++; 
-                String translatedWord = translate(execWord); 
-                try {
-                    wordService.createWord(execWord, translatedWord, currentUser); 
-                } catch (Exception e) { 
-                    //e.printStackTrace(); 
-                    System.out.println("какая-то проблема с сохранением слова в базу");                     
-                }   
-                contextVocabulary = 
-                    contextVocabulary + execWord + " - " + translatedWord + "\n"; 
+                part = part + "\n\n" + execWord;                 
             } 
 
             if (contextVocCounter >= lengthOfContextVocabulary && (
@@ -125,6 +118,25 @@ public class TextFormater {
                     word.endsWith("...")            
                 )) { 
                 contextVocCounter = 0; 
+            
+                String translatedPart = translate(part);
+                String[] wordsOfPart = part.split("\\s+"); 
+                String[] wordsOfTranslatedPart = translatedPart.split("\\s+"); 
+
+                for (int i = 0; i < wordsOfPart.length; i++) {
+                    String sWord = wordsOfPart[i]; 
+                    String tWord = wordsOfTranslatedPart[i];                     
+                    contextVocabulary = 
+                        contextVocabulary + sWord + " - " + tWord + "\n"; 
+
+                    try {
+                        wordService.createWord(sWord, tWord, currentUser); 
+                    } catch (Exception e) { 
+                        //e.printStackTrace(); 
+                        System.out.println("какая-то проблема с сохранением слова в базу");                     
+                    } 
+                } 
+                
                 publication = publication 
                     + contextVocabulary + "\n\n" 
                     + fragment + "\n\n" 
@@ -132,6 +144,7 @@ public class TextFormater {
                     + "\n\n"; 
                 contextVocabulary = ""; 
                 fragment = ""; 
+                part = ""; 
             } 
         } 
         

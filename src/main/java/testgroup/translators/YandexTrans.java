@@ -1,4 +1,4 @@
-package testgroup.service;
+package testgroup.translators;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -15,7 +15,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-public class YandexTranslator { 
+public class YandexTrans { 
     /* 
     final static String IAM_TOKEN = "/тут мой ключ/";
     final static String folder_id = "/тут мой айди/";

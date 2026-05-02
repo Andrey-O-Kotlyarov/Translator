@@ -10,9 +10,11 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SelenScreener {     
+public class SelenScreener {   
+      
     private static String chromeDriverExe = 
-        "C:\\Users\\admin\\Downloads\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe"; 
+    //    "C:\\Users\\admin\\Downloads\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe"; 
+    "C:\\Users\\admin\\Downloads\\chromedriver-win64 (2)\\chromedriver-win64\\chromedriver.exe";
     private static String smallSizeOfScreen = "1280,10000"; 
     private static String bigSizeOfScreen = "1280,14500";
 
@@ -30,10 +32,12 @@ public class SelenScreener {
         // Настройки Headless Chrome
         ChromeOptions options = new ChromeOptions(); 
         options.addArguments("--headless=new"); 
-        options.addArguments("--disable-gpu"); 
-        options.addArguments("--log-level=3"); 
+        options.addArguments("--no-sandbox"); // Рекомендуется для стабильности
+        options.addArguments("--disable-dev-shm-usage"); // Полезно для Linux/CI сред
+        //options.addArguments("--disable-gpu"); 
+        options.addArguments("--log-level=3"); // Уменьшаем логгирование
         options.addArguments("--window-size=" + sizeOfScreen);
-        options.addArguments("--blink-settings=imagesEnabled=false"); 
+        options.addArguments("--blink-settings=imagesEnabled=false"); // Отключаем картинки
 
         // Initialize WebDriver
         WebDriver driver = new ChromeDriver(options);

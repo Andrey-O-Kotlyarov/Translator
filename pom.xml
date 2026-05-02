@@ -69,29 +69,22 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>4.40.0</version>
+            <version>4.43.0</version>
             <!-- You can replace this with the latest version -->
         </dependency>
 
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-devtools-v144</artifactId>
-            <version>4.40.0</version>            
-        </dependency>
+            <artifactId>selenium-devtools-v147</artifactId>
+            <version>4.43.0</version>            
+        </dependency>        
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>2.0.7</version>
-        </dependency>
+        </dependency>        
         
-        <!-- WebDriver Manager for managing browser drivers automatically -->
-        <dependency>
-            <groupId>io.github.bonigarcia</groupId>
-            <artifactId>webdrivermanager</artifactId>
-            <version>5.5.1</version>
-        </dependency>
-
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -115,24 +108,33 @@
             <artifactId>jjwt-api</artifactId>
             <version>0.11.5</version> <!-- или последняя версия -->
         </dependency>
+        
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-impl</artifactId>
             <version>0.11.5</version>
             <scope>runtime</scope>
         </dependency>
+
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId> <!-- или jjwt-gson -->
             <version>0.11.5</version>
             <scope>runtime</scope>
         </dependency> 
+
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20231013</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>5.5</version> 
+        </dependency>
+        
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
@@ -144,7 +146,7 @@
             <artifactId>gson</artifactId>
             <version>2.8.9</version>
         </dependency>
-    </dependencies>
+    </dependencies>    
 
     <build>
         <plugins>
@@ -164,5 +166,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

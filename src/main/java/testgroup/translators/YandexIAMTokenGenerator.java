@@ -1,4 +1,4 @@
-package testgroup.service; 
+package testgroup.translators; 
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

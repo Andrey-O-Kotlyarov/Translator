@@ -17,11 +17,13 @@ public class Main {
         int periodInMinutes = 30; 
         FileCleaner.startFileCleaning(folderPath, periodInMinutes); 
 
+        /* 
         try {
-            YandexIAMTokenGen.gener(); 
+            YandexIAMTokenGen.gener("После этого убедитесь, что в коде у вас стоит заголовок Api-Key, как я писал в предыдущем ответе.", "en"); 
         } catch (Exception e) {
             e.printStackTrace();
         } 
+        */
 
-    } 
+    }  
 } 

@@ -22,10 +22,10 @@ public class YandexIAMTokenGen {
         String detectedLanguageCode; // Код языка, который был определен автоматически
     } 
 
-    public static void gener() {
+    public static void gener(String sourceText, String targetLangCode) {
+        
         try {
-            // --- ПОЛУЧЕНИЕ IAM-ТОКЕНА ЧЕРЕЗ СИСТЕМНУЮ КОМАНДУ ---
-            
+            // --- ПОЛУЧЕНИЕ IAM-ТОКЕНА ЧЕРЕЗ СИСТЕМНУЮ КОМАНДУ ---             
             // 1. Определяем путь к исполняемому файлу yc.exe
             String pathToYc = "C:\\Users\\admin\\yandex-cloud\\bin\\yc.exe"; 
 
@@ -63,8 +63,8 @@ public class YandexIAMTokenGen {
             String jsonBody = String.format(
                 "{" + 
                 "\"folderId\": \"%s\", " + 
-                "\"texts\": [\"Hello, world!\"], " + 
-                "\"targetLanguageCode\": \"ru\"" + 
+                "\"texts\": [\"" + sourceText + "\"], " + 
+                "\"targetLanguageCode\": \"" + targetLangCode + "\"" + 
                 "}", 
                 folderId); 
 
