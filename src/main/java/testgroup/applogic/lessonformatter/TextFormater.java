@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import testgroup.datawork.service.LessonService;
 import testgroup.datawork.service.UserService;
 import testgroup.datawork.service.WordService;
+import testgroup.applogic.translator.YandexIAMTokenGen;
 import testgroup.datawork.entity.Lesson;
 import testgroup.datawork.entity.User;
 import testgroup.datawork.entity.Word; 
@@ -28,7 +29,9 @@ public class TextFormater {
 
     // временная заглушка для метода перевода слов
     public String translate(String wordForTranslating) {
-        String result = wordForTranslating.replaceAll("[аеуёиоуыэяю]", "");
+        //String result = wordForTranslating.replaceAll("[аеуёиоуыэяю]", ""); 
+        String result = 
+            YandexIAMTokenGen.gener(wordForTranslating, "en"); 
         return result;
     }
 

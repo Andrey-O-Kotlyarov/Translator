@@ -22,9 +22,11 @@ public class YandexIAMTokenGen {
         String detectedLanguageCode; // Код языка, который был определен автоматически
     } 
 
-    public static void gener(String sourceText, String targetLangCode) {
+    public static String gener(String sourceText, String targetLangCode) {
         
         try {
+            String translatedText = ""; 
+
             // --- ПОЛУЧЕНИЕ IAM-ТОКЕНА ЧЕРЕЗ СИСТЕМНУЮ КОМАНДУ ---             
             // 1. Определяем путь к исполняемому файлу yc.exe
             String pathToYc = "C:\\Users\\admin\\yandex-cloud\\bin\\yc.exe"; 
@@ -51,7 +53,7 @@ public class YandexIAMTokenGen {
                 while ((errorLine = errorReader.readLine()) != null) {
                     System.err.println(errorLine);
                 }
-                return;
+                return "Ошибка при выполнении 'yc iam create-token'";
             }
 
             System.out.println("IAM-токен успешно получен через yc: " + iamToken);
@@ -117,16 +119,19 @@ public class YandexIAMTokenGen {
 
                 if (translationResponse.translations != null && 
                     translationResponse.translations.length > 0) {
-                    String translatedText = translationResponse.translations[0].text;
+                    translatedText = translationResponse.translations[0].text;
                     System.out.println("Результат перевода: " + translatedText);
+                    return translatedText;
                 } else {
                     System.out.println("В ответе нет данных о переводе.");
                     System.out.println("Полный ответ: " + responseString);
+                    return "В ответе нет данных о переводе."; 
                 }
-            }
-        
+            }        
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return targetLangCode; 
+        
     } 
 } 

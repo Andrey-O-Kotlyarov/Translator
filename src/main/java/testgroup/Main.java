@@ -15,15 +15,14 @@ public class Main {
         String folderPath = 
         "C:\\Users\\admin\\Desktop\\translator\\src\\main\\resources\\static\\screens";
         int periodInMinutes = 30; 
-        FileCleaner.startFileCleaning(folderPath, periodInMinutes); 
-
-        /* 
+        FileCleaner.startFileCleaning(folderPath, periodInMinutes);          
         try {
+            String result = 
             YandexIAMTokenGen.gener("После этого убедитесь, что в коде у вас стоит заголовок Api-Key, как я писал в предыдущем ответе.", "en"); 
+            System.out.println(result); 
         } catch (Exception e) {
             e.printStackTrace();
-        } 
-        */
-
+        }   
     }  
-} 
+}
+ 
