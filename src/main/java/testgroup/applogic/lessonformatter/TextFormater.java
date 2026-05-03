@@ -93,6 +93,8 @@ public class TextFormater {
                     .replaceAll("[\\p{Punct}\\s–—]+", " ")
                     .trim() 
                     .toLowerCase();    
+
+
                     
             fragment = fragment + word + " "; 
 
@@ -123,12 +125,17 @@ public class TextFormater {
                 contextVocCounter = 0; 
             
                 String translatedPart = translate(part);
+                System.out.println(part);
+                System.out.println(translatedPart); 
+
                 String[] wordsOfPart = part.split("\\s+"); 
                 String[] wordsOfTranslatedPart = translatedPart.split("\\s+"); 
 
                 for (int i = 0; i < wordsOfPart.length; i++) {
                     String sWord = wordsOfPart[i]; 
-                    String tWord = wordsOfTranslatedPart[i];                     
+                    System.out.println(sWord); 
+                    String tWord = wordsOfTranslatedPart[i];  
+                    System.out.println(tWord);                    
                     contextVocabulary = 
                         contextVocabulary + sWord + " - " + tWord + "\n"; 
 
