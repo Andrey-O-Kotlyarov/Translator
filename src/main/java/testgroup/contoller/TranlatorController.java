@@ -18,15 +18,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody; 
 import org.springframework.web.bind.annotation.RequestParam; 
 import org.springframework.web.servlet.ModelAndView; 
-import testgroup.dto.JsonDTO;
-import testgroup.model.User;
-import testgroup.model.Word;
-import testgroup.service.FileTypeChecker;
-import testgroup.service.SelenScreener;
-import testgroup.service.TessRecognizer;
-import testgroup.service.TextFormater;
-import testgroup.service.UserService;
-import testgroup.service.WordService; 
+import testgroup.applogic.filemanager.FileTypeChecker;
+import testgroup.applogic.lessonformatter.TextFormater;
+import testgroup.applogic.screenrecognizer.SelenScreener;
+import testgroup.applogic.screenrecognizer.TessRecognizer;
+import testgroup.datawork.dto.JsonDTO;
+import testgroup.datawork.service.UserService;
+import testgroup.datawork.service.WordService;
+import testgroup.datawork.entity.User;
+import testgroup.datawork.entity.Word; 
 
 @Controller
 public class TranlatorController { 

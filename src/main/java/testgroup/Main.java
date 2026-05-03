@@ -2,8 +2,8 @@ package testgroup;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication; 
-import testgroup.service.FileCleaner;
-import testgroup.service.YandexIAMTokenGen;
+import testgroup.applogic.filemanager.FileCleaner;
+import testgroup.applogic.translator.YandexIAMTokenGen;
 
 @SpringBootApplication
 public class Main {
