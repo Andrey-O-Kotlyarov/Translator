@@ -35,7 +35,6 @@ public class TextFormater {
         return result;
     }
 
-
     // метод для составления текста урока 
     public String makeLesson(String originText, String nameOfCurrentUser) {         
         String fragment = ""; 
@@ -95,10 +94,8 @@ public class TextFormater {
             String execWord = word
                     .replaceAll("[\\p{Punct}\\s–—]+", " ")
                     .trim() 
-                    .toLowerCase();    
+                    .toLowerCase();  
 
-
-                    
             fragment = fragment + word + " "; 
 
             if (titleCounter < lengthOfTitle) {
@@ -131,13 +128,16 @@ public class TextFormater {
                 System.out.println(part);
                 System.out.println(translatedPart); 
 
-                String[] wordsOfPart = part.split("\\s+"); 
-                String[] wordsOfTranslatedPart = translatedPart.split("\\s+"); 
+                String[] wordsOfPart = part.split("\\r?\\n"); 
+                String[] wordsOfTranslatedPart = translatedPart.split("\\r?\\n"); 
 
                 for (int i = 0; i < wordsOfPart.length; i++) {
                     String sWord = wordsOfPart[i]; 
+                    if (sWord.isBlank()) {
+                        continue;
+                    }
                     System.out.println(sWord); 
-                    String tWord = wordsOfTranslatedPart[i];  
+                    String tWord = wordsOfTranslatedPart[i].toLowerCase();  
                     System.out.println(tWord);                    
                     contextVocabulary = 
                         contextVocabulary + sWord + " - " + tWord + "\n"; 
