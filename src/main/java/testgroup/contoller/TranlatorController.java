@@ -18,24 +18,24 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody; 
 import org.springframework.web.bind.annotation.RequestParam; 
 import org.springframework.web.servlet.ModelAndView; 
-import testgroup.applogic.filemanager.FileTypeChecker;
-import testgroup.applogic.lessonformatter.TextFormater;
-import testgroup.applogic.screenrecognizer.SelenScreener;
-import testgroup.applogic.screenrecognizer.TessRecognizer;
-import testgroup.datawork.dto.JsonDTO;
-import testgroup.datawork.service.UserService;
-import testgroup.datawork.service.WordService;
-import testgroup.datawork.entity.User;
-import testgroup.datawork.entity.Word; 
+import testgroup.model.dao.UserDao;
+import testgroup.model.dao.WordDao;
+import testgroup.model.dto.JsonDTO;
+import testgroup.model.entity.User;
+import testgroup.model.entity.Word;
+import testgroup.service.filemanager.FileTypeChecker;
+import testgroup.service.lessonformatter.TextFormater;
+import testgroup.service.screenrecognizer.SelenScreener;
+import testgroup.service.screenrecognizer.TessRecognizer; 
 
 @Controller
 public class TranlatorController { 
     
     @Autowired
-    private UserService userService;  
+    private UserDao userService;  
 
     @Autowired
-    private WordService wordService; 
+    private WordDao wordService; 
 
     @Autowired
     private TextFormater textFormater; 
