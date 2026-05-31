@@ -1,4 +1,4 @@
-package testgroup.service.outerservices; 
+package testgroup.service.lemmatizer; 
 
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;

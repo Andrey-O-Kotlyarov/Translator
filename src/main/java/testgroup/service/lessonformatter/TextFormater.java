@@ -13,35 +13,37 @@ import testgroup.model.dao.WordDao;
 import testgroup.model.entity.Lesson;
 import testgroup.model.entity.User;
 import testgroup.model.entity.Word;
-import testgroup.service.outerservices.LemmatizerOuterService;
+import testgroup.service.lemmatizer.LemmatizerOuterService;
 import testgroup.service.translator.YandexTranslator; 
 
 @Service
 public class TextFormater { 
 
     @Autowired
-    private WordDao wordService;  
+    private WordDao wordDao;  
     
     @Autowired
-    private UserDao userService; 
+    private UserDao userDao; 
 
     @Autowired
-    private LessonDao lessonService; 
+    private LessonDao lessonDao; 
 
     @Autowired
     private LemmatizerOuterService lemmatizer; 
 
     // метод для составления текста урока 
-    public String makeLesson(String originText, String nameOfCurrentUser) {         
+    public List<LessonUnit> makeLesson(String originText, String nameOfCurrentUser) {         
         String fragment = ""; 
         String contextVocabulary = ""; 
+        List<WordPair> contextVoc = new ArrayList<>(); 
+        List<LessonUnit> publ = new ArrayList<>(); 
         String publication = ""; 
         String title = ""; 
         int lengthOfTitle = 8; 
         int lengthOfContextVocabulary = 30; 
 
         String[] words = originText.split("[\s\r\n]+"); 
-        Optional<User> userOptional = userService.getUserByUsername(nameOfCurrentUser); 
+        Optional<User> userOptional = userDao.getUserByUsername(nameOfCurrentUser); 
         String partForTranslator = ""; 
 
         // если пользователь не найден, то обращений к базе делать не будем,
@@ -80,7 +82,7 @@ public class TextFormater {
                     fragment = ""; 
                 }                
             }
-            return publication; 
+            //return publication; 
         }
 
         // а если пользователь найден, 
@@ -131,7 +133,7 @@ public class TextFormater {
             // после лемматизации проверяем наличие слова в базе
             Optional<Word> wordInBaseOp = Optional.empty(); 
             try { 
-                wordInBaseOp = wordService.getWordByRusWordAndUser(lemma, currentUser); 
+                wordInBaseOp = wordDao.getWordByRusWordAndUser(lemma, currentUser); 
             } catch (Exception e) { 
                 //e.printStackTrace(); 
                 System.out.println("какая-то проблема с поиском слова в базе");                     
@@ -176,16 +178,28 @@ public class TextFormater {
                     System.out.println("\n" + sWord); 
                     String tWord = translatedWords[i].toLowerCase();  
                     System.out.println(tWord);                    
-                    contextVocabulary = 
-                        contextVocabulary + sWord + " - " + tWord + "\n"; 
-
+                    //contextVocabulary = 
+                    //    contextVocabulary + sWord + " - " + tWord + "\n"; 
+                    WordPair pair = new WordPair(sWord, tWord); 
+                    contextVoc.add(pair); 
                     try {
-                        wordService.createWord(sWord, tWord, currentUser); 
+                        wordDao.createWord(sWord, tWord, currentUser); 
                     } catch (Exception e) { 
                         //e.printStackTrace(); 
                         System.out.println("какая-то проблема с сохранением слова в базу \n");                     
                     } 
                 } 
+                
+                // берем фрагмент исходного текста и контекстный словарь к нему 
+                // создаем из них юнит урока и добавляем этот юнит в содержимое урока
+                // рабочие переменные сбрасываем 
+                LessonUnit unit = new LessonUnit(fragment, contextVoc); 
+                publ.add(unit); 
+                contextVoc = new ArrayList<>(); 
+                //contextVoc.clear(); 
+                contextVocabulary = ""; 
+                fragment = ""; 
+                partForTranslator = ""; 
                 
                 // берем фрагмент исходного текста и контекстный словарь к нему 
                 // добавляем их в содержимое урока, разделяя пустыми строками и полосками 
@@ -205,20 +219,25 @@ public class TextFormater {
         // а если содержимое есть, 
         // то добавляем его вместе с заголовком в базу уроков данного пользователя 
         // и возвращаем готовый текст урока, сделанный методом-добавлятором
-        if (publication.isBlank()) { 
-            return "все слова из переданного текста уже есть в словаре данного пользователя"; 
-        } 
-        String result = addLessonToBase(title, publication, currentUser); 
-        return result; 
-    } 
+        //String test = publ.get(0).getPairs().get(0).getWord(); 
+        //String note = ""; 
+        //if (test.isBlank()) { 
+        //    note = "все слова из переданного текста уже есть в словаре данного пользователя"; 
+        //}
+
+        //if (publication.isBlank()) { 
+        //    return "все слова из переданного текста уже есть в словаре данного пользователя"; 
+        //} 
+        //String result = addLessonToBase(title, publication, currentUser); 
+        return publ;  
+    }    
     
 
     // метод для добавления созданного урока в базу 
     private String addLessonToBase(String title, String publication, User user) { 
         System.out.println("method addLessonToBase() started");
-        Long numberOfNewLesson; 
-
-        Optional<Lesson> lessonOp = lessonService.getLatestLessonForUser(user); 
+        Long numberOfNewLesson;         
+        Optional<Lesson> lessonOp = lessonDao.getLatestLessonForUser(user); 
         if (lessonOp.isPresent()) {
             Lesson latestLesson = lessonOp.get(); 
             Long number = latestLesson.getNumber(); 
@@ -235,7 +254,7 @@ public class TextFormater {
             publication; 
 
         try {
-            lessonService.createLesson(numberOfNewLesson, title, newLesson, user); 
+            lessonDao.createLesson(numberOfNewLesson, title, newLesson, user); 
         } catch (Exception e) {
             System.out.println("при создании урока что-то пошло не так"); 
         }
@@ -248,7 +267,7 @@ public class TextFormater {
     public String showVocabulary(String username) { 
 
         User user = new User(); 
-        Optional<User> userInBaseOp = userService.getUserByUsername(username); 
+        Optional<User> userInBaseOp = userDao.getUserByUsername(username); 
         List<String> pairs = new ArrayList<>(); 
         List<Word> list = new ArrayList<>();
 
@@ -257,7 +276,7 @@ public class TextFormater {
         } 
 
         try {
-            list = wordService.getAllWordsForUser(user);
+            list = wordDao.getAllWordsForUser(user);
         } catch (Exception e) {
             System.out.println("при поиске словаря что-то пошло не так"); 
             return "Cловарь пользователя не найден"; 
@@ -284,7 +303,7 @@ public class TextFormater {
     public List<Word> showVocabularyAsTable(String username) { 
 
         User user = new User(); 
-        Optional<User> userInBaseOp = userService.getUserByUsername(username); 
+        Optional<User> userInBaseOp = userDao.getUserByUsername(username); 
         List<Word> words = new ArrayList<>();
 
         if (userInBaseOp.isPresent()) { 
@@ -292,7 +311,7 @@ public class TextFormater {
         } 
 
         try {
-            words = wordService.getAllWordsForUser(user);
+            words = wordDao.getAllWordsForUser(user);
         } catch (Exception e) {
             System.out.println("при поиске словаря что-то пошло не так"); 
         }
@@ -300,5 +319,6 @@ public class TextFormater {
         Collections.sort(words, Comparator.comparing(Word::getRusWord)); 
         return words;               
     } 
+
 
 } 

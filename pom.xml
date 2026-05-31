@@ -31,7 +31,7 @@
         </repository>
     </repositories>
     
-    <dependencies> 
+    <dependencies>        
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
@@ -146,7 +146,7 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.5.13</version> <!-- или новее -->
-        </dependency>
+        </dependency> 
     </dependencies>    
 
     <build>

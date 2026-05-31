@@ -24,6 +24,7 @@ import testgroup.model.dto.JsonDTO;
 import testgroup.model.entity.User;
 import testgroup.model.entity.Word;
 import testgroup.service.filemanager.FileTypeChecker;
+import testgroup.service.lessonformatter.LessonUnit;
 import testgroup.service.lessonformatter.TextFormater;
 import testgroup.service.screenrecognizer.SelenScreener;
 import testgroup.service.screenrecognizer.TessRecognizer; 
@@ -314,11 +315,13 @@ public class TranlatorController {
             System.err.println("Ошибка при чтении файла: " + e.getMessage());
         }
 
-        String lesson = textFormater.makeLesson(content, nameOfCurrentUser); 
+        //String lesson = textFormater.makeLesson(content, nameOfCurrentUser); 
+        List<LessonUnit> lessonContent = textFormater.makeLesson(content, nameOfCurrentUser); 
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("application4");
-        modelAndView.addObject("content", lesson); 
+        //modelAndView.addObject("content", lesson); 
+        modelAndView.addObject("lesson", lessonContent); 
         modelAndView.addObject("user", nameOfCurrentUser); 
         return modelAndView; 
     }
