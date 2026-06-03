@@ -32,11 +32,11 @@ public class TextFormater {
     private LemmatizerOuterService lemmatizer; 
 
     // метод для составления текста урока 
-    public List<LessonUnit> makeLesson(String originText, String nameOfCurrentUser) {         
+    public Optional<Lesson> makeLesson(String originText, String nameOfCurrentUser) {         
         String fragment = ""; 
         String contextVocabulary = ""; 
         List<WordPair> contextVoc = new ArrayList<>(); 
-        List<LessonUnit> publ = new ArrayList<>(); 
+        List<LessonUnit> unitList = new ArrayList<>(); 
         String publication = ""; 
         String title = ""; 
         int lengthOfTitle = 8; 
@@ -112,9 +112,9 @@ public class TextFormater {
 
             // обрезаем знаки препинания, делаем строчные буквы 
             String execWord = word
-                    .replaceAll("[\\p{Punct}\\s–—«»]+", " ")
+                    .replaceAll("[\\p{Punct}\\s–—«»\"'“”‘’]+", " ")
                     .trim() 
-                    .toLowerCase();  
+                    .toLowerCase();    
                     
             // если получившееся слово не содержит букв
             // или состоит из одних цифр или знаков препинания - пропускаем его
@@ -159,8 +159,8 @@ public class TextFormater {
                          
                 String translatedPart = YandexTranslator.translate(
                     partForTranslator, "en", iamToken); 
-                //System.out.println(partForTranslator);
-                //System.out.println(translatedPart); 
+                System.out.println(partForTranslator);
+                System.out.println(translatedPart); 
 
                 // стопку переведенных слов из переводчика преобразуем в массив
                 // стопку непереведенных слов тоже преобразуем в массив
@@ -189,54 +189,60 @@ public class TextFormater {
                         System.out.println("какая-то проблема с сохранением слова в базу \n");                     
                     } 
                 } 
+
+                // создаем переведенный фрагмент
+                String translatedFragment = YandexTranslator.translate(
+                    fragment, "en", iamToken); 
                 
-                // берем фрагмент исходного текста и контекстный словарь к нему 
+                // берем контекстный словарь к фрагменту
+                // берем сам фрагмент и его перевод 
                 // создаем из них юнит урока и добавляем этот юнит в содержимое урока
                 // рабочие переменные сбрасываем 
-                LessonUnit unit = new LessonUnit(fragment, contextVoc); 
-                publ.add(unit); 
-                contextVoc = new ArrayList<>(); 
-                //contextVoc.clear(); 
+                LessonUnit unit = new LessonUnit(contextVoc, fragment, translatedFragment); 
+                unitList.add(unit); 
+
+                contextVoc = new ArrayList<>();  
                 contextVocabulary = ""; 
                 fragment = ""; 
                 partForTranslator = ""; 
-                
-                // берем фрагмент исходного текста и контекстный словарь к нему 
-                // добавляем их в содержимое урока, разделяя пустыми строками и полосками 
-                // рабочие переменные сбрасываем 
-                publication = publication 
-                    + contextVocabulary + "\n\n" 
-                    + fragment + "\n\n" 
-                    + "===========================================================" 
-                    + "\n\n\n"; 
-                contextVocabulary = ""; 
-                fragment = ""; 
-                partForTranslator = "";
             } 
         } 
         
-        // если в итоге в содержимом урока ничего нет, то возвращаем сообщение об этом
-        // а если содержимое есть, 
-        // то добавляем его вместе с заголовком в базу уроков данного пользователя 
-        // и возвращаем готовый текст урока, сделанный методом-добавлятором
-        //String test = publ.get(0).getPairs().get(0).getWord(); 
-        //String note = ""; 
-        //if (test.isBlank()) { 
-        //    note = "все слова из переданного текста уже есть в словаре данного пользователя"; 
-        //}
+        // если в итоге в содержимом урока ничего нет, то создаем сообщение об этом
+        // помещаем это сообщение в тайтл урока и возвращаем этот урок
+        // не добавляя его в базу 
+        try { 
+            String test = unitList.get(0).getTextFragment(); 
+        } catch (Exception e) { 
+            String note = 
+                "Все слова из переданного текста уже есть в словаре данного пользователя " + "\n" 
+                + "или объем текста слишком мал для создания урока"; 
+            Lesson newLesson = new Lesson(); 
+            newLesson.setTitle(note); 
+            return Optional.of(newLesson); 
+        } 
 
-        //if (publication.isBlank()) { 
-        //    return "все слова из переданного текста уже есть в словаре данного пользователя"; 
-        //} 
-        //String result = addLessonToBase(title, publication, currentUser); 
-        return publ;  
-    }    
+            // это пока не работает
+        // а если в содержимом что-то есть, то создаем из него урок, помещаем его в базу 
+        // и возвращаем этот урок из базы        
+        //return addLessonToBase(title, unitList, currentUser); 
+        Lesson newLesson = new Lesson(); 
+        newLesson.setNumber(1L); 
+        newLesson.setTitle("бла бла"); 
+        newLesson.setContent(unitList); 
+        newLesson.setUser(currentUser); 
+        return Optional.of(newLesson); 
+    } 
     
 
     // метод для добавления созданного урока в базу 
-    private String addLessonToBase(String title, String publication, User user) { 
+    private Optional<Lesson> addLessonToBase(String title, List<LessonUnit> content, User user) { 
         System.out.println("method addLessonToBase() started");
-        Long numberOfNewLesson;         
+        Long numberOfNewLesson;  
+        
+        // берем из базы последний урок 
+        // если он есть, то берем из него номер и увеличиваем на один 
+        // а если уроков нет, то делаем номер равным единице         
         Optional<Lesson> lessonOp = lessonDao.getLatestLessonForUser(user); 
         if (lessonOp.isPresent()) {
             Lesson latestLesson = lessonOp.get(); 
@@ -244,22 +250,19 @@ public class TextFormater {
             numberOfNewLesson = number + 1;             
         } else { 
             numberOfNewLesson = 1L; 
-        }
-        
-        String newLesson = 
-            "===========================================================" + "\n" +  
-            "Урок № " + numberOfNewLesson + 
-            " пользователя " + user.getUsername() + "\n" + 
-            "===========================================================" + "\n\n\n" + 
-            publication; 
+        } 
 
+        // создаем в базе новый урок с полученным номером
+        // и этот созданный урок сразу извлекаем из базы и возвращаем
+        Optional<Lesson> savedLessonOp = Optional.empty(); 
         try {
-            lessonDao.createLesson(numberOfNewLesson, title, newLesson, user); 
+            Long lessonID = lessonDao.createLesson(numberOfNewLesson, title, content, user); 
+            savedLessonOp = lessonDao.getLessonById(lessonID); 
         } catch (Exception e) {
             System.out.println("при создании урока что-то пошло не так"); 
         }
 
-        return newLesson; 
+        return savedLessonOp; 
     }
 
 

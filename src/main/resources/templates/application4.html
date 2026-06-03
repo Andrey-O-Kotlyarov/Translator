@@ -182,6 +182,7 @@
       .separating-line {
         height: 4px;
         background: rgba(128, 0, 0, 1); 
+        //margin: 166px 210px 42px 20px; 
         margin: 166px 210px 42px 20px;   
       }
       .text-block {
@@ -192,7 +193,8 @@
         /*top: 520px; */
         /*right: 220px; */
         width: 950px; 
-        margin: 0px 0px 120px 124px; 
+        //margin: 0px 0px 120px 124px; 
+        margin: 0px 0px 0px 124px; 
       } 
       .image-block {         
         width: 950px;
@@ -209,7 +211,8 @@
         color: rgba(128, 0, 0, 1);   
         font-size: 17px; 
         font-weight: bold;   
-        margin: -50px auto 50px 120px; 
+        //margin: -50px auto 50px 124px; 
+        margin: 0px auto 0px 124px; 
         /*text-align: center; */
       } 
       .column { 
@@ -227,6 +230,15 @@
         color: rgba(128, 0, 0, 1);  
       }    
       /* Стили для содержимого урока */ 
+      .lesson-without-number-title { 
+        margin: 0px auto 50px 124px; 
+      } 
+      .lesson-number-title { 
+        color: rgba(128, 0, 0, 1);   
+        font-size: 20px; 
+        font-weight: bold; 
+        margin: 50px auto 50px 200px; 
+      } 
       .flex-unit {
         display: flex; 
         justify-content: space-between; 
@@ -251,14 +263,13 @@
       } 
       .text-fragment { 
         width: 950px;
-        margin: 45px 0px 0px 124px; 
+        margin: 35px 0px 0px 124px; 
       }
       .separator { 
         border: 0;
         border-top: 4px solid rgba(128, 0, 0, 1);
         width: 950px; 
-        margin: 45px 0px 45px 124px; 
-        //margin: 49px 0;
+        margin: 45px 0px 35px 124px; 
       } 
     </style>
   </head>
@@ -363,27 +374,57 @@
         </tr>         
     </table>
 
-    <!-- Перебираем каждый юнит урока -->
-    <div th:each="unit : ${lesson}"> 
+    <div>
+        <div  class="lesson-number-title"
+              th:if="${lessonNumber != null}">
+            Урок <span th:text="${lessonNumber}"> </span>
+            пользователя <span th:text="${user}"> </span>
+        </div> 
+        <div  class="lesson-without-number-title"
+              th:if="${lessonNumber == null}"
+              th:text="${lessonTitle}"> 
+        </div>      
+    </div>
 
-      <!-- Цикл по строкам. Половина от количества пар -->
-      <div th:each="i : ${#numbers.sequence(0, (unit.pairs.size()/2))}" class="flex-unit">            
-        <!-- ПЕРВАЯ КОЛОНКА (Слово и перевод) -->
+    <!-- Перебираем каждый юнит урока --> 
+    <!-- 1. для каждого юнита переберем половину пар слов --> 
+    <!-- 1а.  если номер пары равен индексу из первой половины, помещаем ее в первую колонку-->
+    <!-- 1б.  а если номер пары равен индекс + половина длины списка, то во вторую-->
+    <!-- 2. для каждого юнита извлечем фрагмент текста -->
+    <!-- 2. для каждого юнита извлечем перевод фрагмента--> 
+    <!-- 4. добавим разделитель -->
+    <div th:each="unit : ${lessonContent}">       
+      <div class="flex-unit" th:each="i : ${#numbers.sequence(0, (unit.pairs.size()/2))}" >   
+
+        <!-- колонка пар из первой половины пар -->
         <div class="flex-column">
-          <div class="word"  th:if="${i lt unit.pairs.size()/2}" th:text="${unit.pairs.get(i).word}"></div>
-          <div class="trans" th:if="${i lt unit.pairs.size()/2}" th:text="${unit.pairs.get(i).translation}"></div>
+          <div class="word"  
+              th:if="${i lt unit.pairs.size()/2}" 
+              th:text="${unit.pairs.get(i).word}"></div>
+          <div class="trans" 
+              th:if="${i lt unit.pairs.size()/2}" 
+              th:text="${unit.pairs.get(i).translation}"></div>
         </div>
 
-        <!-- ВТОРАЯ КОЛОНКА (Слово и перевод) -->
+        <!-- колонка пар из второй половины пар -->
         <div class="flex-column">
-          <div class="word"  th:if="${(i + unit.pairs.size()/2) lt unit.pairs.size()}" th:text="${unit.pairs.get(i + unit.pairs.size()/2).word}"></div>
-          <div class="trans" th:if="${(i + unit.pairs.size()/2) lt unit.pairs.size()}" th:text="${unit.pairs.get(i + unit.pairs.size()/2).translation}"></div>
+          <div class="word"  
+              th:if="${(i + unit.pairs.size()/2) lt unit.pairs.size()}" 
+              th:text="${unit.pairs.get(i + unit.pairs.size()/2).word}"></div>
+          <div class="trans" 
+              th:if="${(i + unit.pairs.size()/2) lt unit.pairs.size()}" 
+              th:text="${unit.pairs.get(i + unit.pairs.size()/2).translation}"></div>
         </div>
       </div> <!-- Конец .flex-unit -->
 
       <!-- Фрагмент текста -->
       <div class="text-fragment">
         <p th:text="${unit.textFragment}"></p>
+      </div> 
+
+      <!-- Переведенный фрагмент -->
+      <div class="text-fragment">
+        <p th:text="${unit.translation}"></p>
       </div> 
     
       <hr class="separator">

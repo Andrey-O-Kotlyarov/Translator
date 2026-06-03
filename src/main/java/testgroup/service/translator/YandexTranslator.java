@@ -120,7 +120,8 @@ public class YandexTranslator {
         
                 // 7. ЯВНО ДЕКОДИРУЕМ БАЙТЫ В СТРОКУ С ПОМОЩЬЮ UTF-8
                 String responseString = result.toString("UTF-8");
-        
+                System.out.println("Ответ от сервера: " + responseString);
+
                 // 8. Парсим JSON с помощью Gson
                 Gson gson = new Gson();
                 TranslationResponse translationResponse = 

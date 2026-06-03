@@ -17,10 +17,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody; 
 import org.springframework.web.bind.annotation.RequestParam; 
-import org.springframework.web.servlet.ModelAndView; 
+import org.springframework.web.servlet.ModelAndView;
+
+import jakarta.persistence.Column;
 import testgroup.model.dao.UserDao;
 import testgroup.model.dao.WordDao;
 import testgroup.model.dto.JsonDTO;
+import testgroup.model.entity.Lesson;
 import testgroup.model.entity.User;
 import testgroup.model.entity.Word;
 import testgroup.service.filemanager.FileTypeChecker;
@@ -316,12 +319,26 @@ public class TranlatorController {
         }
 
         //String lesson = textFormater.makeLesson(content, nameOfCurrentUser); 
-        List<LessonUnit> lessonContent = textFormater.makeLesson(content, nameOfCurrentUser); 
+        Lesson lesson = null; 
+        Long number = null;  
+        String title = "";  
+        List<LessonUnit> lessonContent = null; 
+
+        Optional<Lesson> lessonOp = 
+            textFormater.makeLesson(content, nameOfCurrentUser); 
+        if(lessonOp.isPresent()) { 
+            lesson = lessonOp.get(); 
+            number = lesson.getNumber();  
+            title = lesson.getTitle();  
+            lessonContent = lesson.getContent(); 
+        }
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("application4");
         //modelAndView.addObject("content", lesson); 
-        modelAndView.addObject("lesson", lessonContent); 
+        modelAndView.addObject("lessonNumber", number); 
+        modelAndView.addObject("lessonContent", lessonContent); 
+        modelAndView.addObject("lessonTitle", title); 
         modelAndView.addObject("user", nameOfCurrentUser); 
         return modelAndView; 
     }

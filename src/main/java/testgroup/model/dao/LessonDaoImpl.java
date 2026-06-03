@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import testgroup.model.entity.Lesson;
 import testgroup.model.entity.User;
 import testgroup.model.repository.LessonRepository;
+import testgroup.service.lessonformatter.LessonUnit;
 
 @Repository
 public class LessonDaoImpl implements LessonDao { 
@@ -16,7 +17,7 @@ public class LessonDaoImpl implements LessonDao {
 
 
     @Override
-    public Long createLesson(Long number, String title, String content, User user) { 
+    public Long createLesson(Long number, String title, List<LessonUnit> content, User user) { 
         Lesson lesson = new Lesson(); 
         lesson.setNumber(number); 
         lesson.setTitle(title); 
@@ -37,7 +38,14 @@ public class LessonDaoImpl implements LessonDao {
     @Override
     public Optional<Lesson> getLatestLessonForUserId(Long userId) {
         return lessonRepository.findTopByUser_IdOrderByNumberDesc(userId);
-    } 
+    }     
+
+    
+    @Override
+    @SuppressWarnings("null")
+    public Optional<Lesson> getLessonById(Long id) {
+        return lessonRepository.findById(id); 
+    }
 
 
     @Override

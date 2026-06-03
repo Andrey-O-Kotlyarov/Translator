@@ -6,9 +6,13 @@ import lombok.NonNull;
 
 @Data
 public class LessonUnit { 
+    
     @NonNull
-    private String textFragment; // Фрагмент текста 
+    private List<WordPair> pairs; // Список слов с переводами к фрагменту текста
+    
+    @NonNull
+    private String textFragment; // сам фрагмент текста 
 
     @NonNull
-    private List<WordPair> pairs; // Список слов к этому фрагменту 
+    private String translation; // его перевод
 } 
