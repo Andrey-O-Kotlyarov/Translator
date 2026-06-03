@@ -15,6 +15,7 @@ import testgroup.model.entity.User;
 import testgroup.model.entity.Word;
 import testgroup.service.lemmatizer.LemmatizerOuterService;
 import testgroup.service.translator.YandexTranslator; 
+import java.util.regex.Pattern;
 
 @Service
 public class TextFormater { 
@@ -159,8 +160,8 @@ public class TextFormater {
                          
                 String translatedPart = YandexTranslator.translate(
                     partForTranslator, "en", iamToken); 
-                System.out.println(partForTranslator);
-                System.out.println(translatedPart); 
+                //System.out.println(partForTranslator);
+                //System.out.println(translatedPart); 
 
                 // стопку переведенных слов из переводчика преобразуем в массив
                 // стопку непереведенных слов тоже преобразуем в массив
@@ -190,9 +191,12 @@ public class TextFormater {
                     } 
                 } 
 
-                // создаем переведенный фрагмент
+                // очищаем исходный фрагмент от нечитаемых символов
+                // и создаем переведенный фрагмент
+                String cleanFragment = cleanUnreadableCharacters(fragment); 
+                System.out.println(cleanFragment); 
                 String translatedFragment = YandexTranslator.translate(
-                    fragment, "en", iamToken); 
+                    cleanFragment, "en", iamToken); 
                 
                 // берем контекстный словарь к фрагменту
                 // берем сам фрагмент и его перевод 
@@ -324,4 +328,23 @@ public class TextFormater {
     } 
 
 
+    private String cleanUnreadableCharacters(String input) {
+        if (input == null) {
+            return "";
+        } 
+
+        // Регулярное выражение:
+        // [\u0000-\u001F] - управляющие символы ASCII (табуляция, перевод строки и т.д.)
+        // \u007F          - символ DEL
+        // [\u0080-\u009F] - управляющие символы C1
+        // \u200B           - нулевой ширины пробел (Zero-width space)
+        // \uFEFF           - метка порядка байтов (Byte Order Mark, BOM)
+
+        String cleaned = input.replaceAll(
+            "[\u0000-\u001F\u007F\u0080-\u009F\\u200B\\uFEFF]", ""); 
+        String moreCleaned = cleaned.replaceAll(
+            "[\"'“”‘’«»]+", "\'"); 
+
+        return moreCleaned;
+    } 
 } 
