@@ -15,7 +15,6 @@ import testgroup.model.entity.User;
 import testgroup.model.entity.Word;
 import testgroup.service.lemmatizer.LemmatizerOuterService;
 import testgroup.service.translator.YandexTranslator; 
-import java.util.regex.Pattern;
 
 @Service
 public class TextFormater { 
@@ -229,13 +228,16 @@ public class TextFormater {
             // это пока не работает
         // а если в содержимом что-то есть, то создаем из него урок, помещаем его в базу 
         // и возвращаем этот урок из базы        
-        //return addLessonToBase(title, unitList, currentUser); 
+        return addLessonToBase(title, unitList, currentUser); 
+
+        /* 
         Lesson newLesson = new Lesson(); 
         newLesson.setNumber(1L); 
         newLesson.setTitle("бла бла"); 
         newLesson.setContent(unitList); 
         newLesson.setUser(currentUser); 
         return Optional.of(newLesson); 
+        */
     } 
     
 
@@ -259,11 +261,19 @@ public class TextFormater {
         // создаем в базе новый урок с полученным номером
         // и этот созданный урок сразу извлекаем из базы и возвращаем
         Optional<Lesson> savedLessonOp = Optional.empty(); 
+        Long lessonID = null;
         try {
-            Long lessonID = lessonDao.createLesson(numberOfNewLesson, title, content, user); 
+            lessonID = lessonDao.createLesson(numberOfNewLesson, title, content, user); 
+        } catch (Exception e) {
+            System.out.println("\n\n" + "при сохранении урока в базу что-то пошло не так");             
+            e.printStackTrace(); 
+        } 
+
+        try {
             savedLessonOp = lessonDao.getLessonById(lessonID); 
         } catch (Exception e) {
-            System.out.println("при создании урока что-то пошло не так"); 
+            System.out.println("\n\n" + "при извлечении урока из базы что-то пошло не так"); 
+            e.printStackTrace(); 
         }
 
         return savedLessonOp; 
@@ -347,4 +357,5 @@ public class TextFormater {
 
         return moreCleaned;
     } 
+
 } 

@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody; 
 import org.springframework.web.bind.annotation.RequestParam; 
-import org.springframework.web.servlet.ModelAndView;
-
-import jakarta.persistence.Column;
+import org.springframework.web.servlet.ModelAndView; 
 import testgroup.model.dao.UserDao;
 import testgroup.model.dao.WordDao;
 import testgroup.model.dto.JsonDTO;
@@ -317,8 +315,7 @@ public class TranlatorController {
         } catch (IOException e) {
             System.err.println("Ошибка при чтении файла: " + e.getMessage());
         }
-
-        //String lesson = textFormater.makeLesson(content, nameOfCurrentUser); 
+        
         Lesson lesson = null; 
         Long number = null;  
         String title = "";  
@@ -335,7 +332,6 @@ public class TranlatorController {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("application4");
-        //modelAndView.addObject("content", lesson); 
         modelAndView.addObject("lessonNumber", number); 
         modelAndView.addObject("lessonContent", lessonContent); 
         modelAndView.addObject("lessonTitle", title); 
