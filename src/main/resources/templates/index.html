@@ -325,22 +325,23 @@
       </button> 
     </form> 
 
-    <form class="buttonBlock3" action="/regform" method="GET">  
+    <form class="buttonBlock3" action="/showLoginForm" method="GET">  
       <button class="registration">
         <img class="loginAvatar" src="/images/login-avatar.png">
         <div class="usernameBlock">  
-          <div th:if="${user != null && !#strings.isEmpty(user)}" th:text="${user}">    
+          <div th:if="${userName != null && !#strings.isEmpty(userName)}" th:text="${userName}">    
           </div> 
-          <div th:unless="${user != null && !#strings.isEmpty(user)}">
+          <div th:unless="${userName != null && !#strings.isEmpty(userName)}">
             войти
           </div>
         </div>
       </button> 
     </form>
         
-    <form class="buttonAndField" action="/screen" method="GET">       
+    <!-- форма с кнопкой для отправки юрл страницы, которую нужно отсканировать -->
+    <form class="buttonAndField" action="/showScreen" method="GET">       
       <div class="fieldAndInstructon">         
-        <input class="field" type="text" name="login">
+        <input class="field" type="text" name="screeningPageURL">
         <div>
           вставьте сюда URL страницы, которую хотите отсканировать, и нажмите кнопку "сканировать"
         </div>        
@@ -379,12 +380,12 @@
             создать <br/> урок
           </button> 
         </div> 
-        <form action="/lessons" method="POST">        
+        <form action="/showLessonList" method="POST">        
           <button class="downloadButton">
             ваши уроки
           </button> 
         </form> 
-        <form action="/vocabulary" method="POST">        
+        <form action="/showVocabulary" method="POST">        
           <button class="downloadButton" id="vocaButton">
             словарь
           </button> 
@@ -400,6 +401,7 @@
     <img class="imageBlock" th:src="@{${imagePath}}" id="myImage" />     
     <canvas class="hidden" width="0" height="0" id="hidden-canvas" > </canvas>  
 
+    <!-- при оффлайн отладке сюда вставлялась картинка при нажатии кнопки -->
     <div id="theImage"> </div> 
 
     <!-- список уроков -->
@@ -441,7 +443,7 @@
         <div  class="titleOfLesson"
               th:if="${lessonNumber != null}">
             Урок <span th:text="${lessonNumber}"> </span>
-            пользователя <span th:text="${user}"> </span>
+            пользователя <span th:text="${userName}"> </span>
         </div> 
         <div  class="titleOfLessonWithoutNumber"
               th:if="${lessonNumber == null}"
@@ -506,12 +508,12 @@
         <form action="/showSelectedLesson/" method="post" id="showSelectedLessonForm">       
         </form>
     </div> 
-  </body>
+  </body>  
 
   <script>      
     function deleteWord(wordId) {
       let form = document.getElementById('deleteWordForm');  
-      form.action = '/delete/' + wordId; 
+      form.action = '/deleteWord/' + wordId; 
       document.getElementById('scrollPositionInput').value = window.scrollY;       
       form.submit();
     }        
@@ -550,17 +552,19 @@
       var content = $("#container").text(); 
 
       $.ajax({
-        url: "/createlesson",
+        url: "/createLesson",
         type: "POST", 
         contentType: 'application/json',
         data: JSON.stringify({content: content}),
         complete: function(){
-          window.location.href = '/showlesson'; 
+          window.location.href = '/showLesson'; 
         }
       });     
     });     
     
     
+    // отправка картинки для распознавания текста на /uploadScreenForRecognizing 
+    // и переход на /showRecognizedText
     document.getElementById('recoButton').addEventListener('click', function () { 
       const imageElement = document.getElementById('myImage'); 
       const canvas = document.getElementById('hidden-canvas');
@@ -574,20 +578,21 @@
       const imageDataUrl = canvas.toDataURL('image/png'); 
       
       $.ajax({
-        url: '/upload_image',
+        url: '/uploadScreenForRecognizing',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ content: imageDataUrl }),
-        complete: function(){
-          window.location.href = '/text'; 
+        complete: function() {
+          window.location.href = '/showRecognizedText'; 
         }
       });  
     }); 
 
 
+    // функция для отладочной оффлайн загрузки картинки при нажатии кнопки vocaButton
     document.getElementById('vocaButton').addEventListener('click', function() { 
       const imgElement = new Image(); 
-      imgElement.classList.add('image-block');
+      imgElement.classList.add('imageBlock');
       imgElement.onload = function () {
         const container = document.getElementById('theImage');
         container.appendChild(imgElement);

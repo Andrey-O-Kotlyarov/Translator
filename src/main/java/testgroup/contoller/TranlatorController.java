@@ -51,59 +51,59 @@ public class TranlatorController {
     
     //заглавная страница
     @GetMapping(value = "/index")
-    public ModelAndView showApplication4() {  
+    public ModelAndView showIndex() {  
 
         System.out.println("controller /index started"); 
         String insertingText = "Приступаем"; 
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("application4");
+        modelAndView.setViewName("index");
         modelAndView.addObject("content", insertingText); 
-        modelAndView.addObject("user", nameOfCurrentUser); 
+        modelAndView.addObject("userName", nameOfCurrentUser); 
         return modelAndView;
     }
     
 
     //создание картинки и переход на страницу с картинкой
-    @GetMapping(value = "/screen")
-    public ModelAndView showApplication4WithScreen(
-            @RequestParam(name = "login") String login, 
+    @GetMapping(value = "/showScreen")
+    public ModelAndView showScreen(
+            @RequestParam(name = "screeningPageURL") String screeningPageURL, 
             @RequestParam(name = "bigSize") boolean bigSize) { 
 
-        System.out.println("controller /screen started");
+        System.out.println("controller /showScreen started");
 
-        String sourceURL = login; 
         String timestamp = Long.toString(System.currentTimeMillis()); 
         String pictureFile = 
             "src\\main\\resources\\static\\screens\\screenshot_" + timestamp + ".png";
         String serverAccessToPictureFile = "/screens/screenshot_" + timestamp + ".png";  
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("application4");
+        modelAndView.setViewName("index");
         
-        if (sourceURL == null || sourceURL.isBlank()) {  
+        if (screeningPageURL == null || screeningPageURL.isBlank()) {  
             System.out.println("URL не передан");            
             modelAndView.addObject("content", 
                 "Похоже, что Вы не ввели URL или ввели его некорректно " + "\n" + 
                 "Попробуйте еще раз"); 
-            modelAndView.addObject("user", nameOfCurrentUser); 
+            modelAndView.addObject("userName", nameOfCurrentUser); 
             return modelAndView; 
         }
         
-        SelenScreener.screenPage(sourceURL, pictureFile, bigSize); 
+        SelenScreener.screenPage(screeningPageURL, pictureFile, bigSize); 
         System.out.println("Screening is done"); 
         
         modelAndView.addObject("imagePath", serverAccessToPictureFile); 
-        modelAndView.addObject("user", nameOfCurrentUser); 
+        modelAndView.addObject("userName", nameOfCurrentUser); 
         return modelAndView; 
     }     
 
 
-    //метод получения изображения 
-    @PostMapping(value = "/upload_image")
-    public ResponseEntity<String> handleImageUpload(@RequestBody JsonDTO request) throws Exception { 
+    //получение от клиента картинки для распознавания текста на ней
+    @PostMapping(value = "/uploadScreenForRecognizing")
+    public ResponseEntity<String> uploadScreenForRecognizing(
+            @RequestBody JsonDTO request) throws Exception { 
 
-        System.out.println("controller /upload_image started"); 
+        System.out.println("controller /uploadScreenForRecognizing started"); 
         String pictureForTess = "src\\main\\resources\\static\\pictureForTess.png"; 
         
         Path path = Paths.get(pictureForTess); 
@@ -126,21 +126,21 @@ public class TranlatorController {
             System.out.println("хуйня какая-то"); 
         }   
         
-        //это все равно не отображается, вместо этого будет переход на /text 
+        //это все равно не отображается, вместо этого будет переход на /showRecognizedText 
         return ResponseEntity.ok("ok");      
     }
 
  
     //переход на страницу с текстом
-    @GetMapping(value = "/text")
-    public ModelAndView showNewScreen() {  
+    @GetMapping(value = "/showRecognizedText")
+    public ModelAndView showRecognizedText() {  
 
-        System.out.println("controller /text started"); 
+        System.out.println("controller /showRecognizedText started"); 
         String pictureForTess = "src\\main\\resources\\static\\pictureForTess.png";  
         String textFile = "src\\main\\resources\\static\\output.txt";  
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("application4"); 
+        modelAndView.setViewName("index"); 
 
         try {
             boolean isPNG = FileTypeChecker.checkPNG(pictureForTess);             
@@ -148,7 +148,7 @@ public class TranlatorController {
                 System.out.println("файл не является png");                 
                 modelAndView.addObject("content", 
                     "Прежде чем распознавать, нужно что-то отсканировать"); 
-                modelAndView.addObject("user", nameOfCurrentUser);                     
+                modelAndView.addObject("userName", nameOfCurrentUser);                     
                 return modelAndView; 
             }
         } catch (Exception e) {
@@ -163,29 +163,29 @@ public class TranlatorController {
         String preparedText = TessRecognizer.deleteLastLine(halfPreparedText); 
 
         modelAndView.addObject("content", preparedText); 
-        modelAndView.addObject("user", nameOfCurrentUser); 
+        modelAndView.addObject("userName", nameOfCurrentUser); 
         return modelAndView; 
     } 
 
 
     //форма регистрации и входа
-    @GetMapping(value = "/regform")
-    public ModelAndView getUserName() {   
+    @GetMapping(value = "/showLoginForm")
+    public ModelAndView showLoginForm() {   
         
-        System.out.println("controller /regform started");  
+        System.out.println("controller /showLoginForm started");  
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("regform"); 
+        modelAndView.setViewName("loginForm"); 
         return modelAndView; 
     }
 
 
     //вход существующего пользователя 
-    @PostMapping(value = "/olduser")
-    public ModelAndView doOldUserIn(
+    @PostMapping(value = "/logIn")
+    public ModelAndView logIn (
             @RequestParam("username") String username,
             @RequestParam("pass") String pass) {   
         
-        System.out.println("controller /olduser started"); 
+        System.out.println("controller /logIn started"); 
         Optional<User> userInBaseOp = 
             userDao.getUserByUsernameAndPass(username, pass); 
 
@@ -193,7 +193,7 @@ public class TranlatorController {
             System.out.println("Пользователь не найден в базе"); 
 
             ModelAndView modelAndView = new ModelAndView(); 
-            modelAndView.setViewName("regform"); 
+            modelAndView.setViewName("loginForm"); 
             modelAndView.addObject("content", "Пользователь не найден");
             return modelAndView;
         } 
@@ -202,32 +202,32 @@ public class TranlatorController {
         System.out.println("Пользователь " + nameOfCurrentUser + " найден в базе" );
           
         ModelAndView modelAndView = new ModelAndView(); 
-        modelAndView.setViewName("application4"); 
+        modelAndView.setViewName("index"); 
         modelAndView.addObject("content", "Добро пожаловать, " + nameOfCurrentUser + "!"); 
-        modelAndView.addObject("user", nameOfCurrentUser); 
+        modelAndView.addObject("userName", nameOfCurrentUser); 
         return modelAndView; 
     } 
 
 
     //форма создания нового пользователя 
-    @PostMapping(value = "/newuser")
-    public ModelAndView doNewUserIn() {   
+    @PostMapping(value = "/showRegistrationForm")
+    public ModelAndView showRegistrationForm () {   
         
-        System.out.println("controller /newuser started");  
+        System.out.println("controller /showRegistrationForm started");  
         ModelAndView modelAndView = new ModelAndView();            
-        modelAndView.setViewName("regnewuser"); 
+        modelAndView.setViewName("registrationForm"); 
         return modelAndView; 
     }
 
 
     //создание нового пользователя в базе
-    @PostMapping(value = "/createacc")
-    public ModelAndView createNewAcc(
+    @PostMapping(value = "/createAcc")
+    public ModelAndView createAcc (
             @RequestParam("mail") String mail,
             @RequestParam("username") String username,
             @RequestParam("pass") String pass) {   
         
-        System.out.println("controller /createacc started"); 
+        System.out.println("controller /createAcc started"); 
         Long id; 
         ModelAndView modelAndView = new ModelAndView();  
 
@@ -236,7 +236,7 @@ public class TranlatorController {
         } catch (Exception e) {
             System.out.println("Такой пользователь уже есть в базе"); 
 
-            modelAndView.setViewName("regnewuser"); 
+            modelAndView.setViewName("registrationForm"); 
             modelAndView.addObject("content", "Такой пользователь уже зарегистрирован");
             return modelAndView;
         }          
@@ -245,7 +245,7 @@ public class TranlatorController {
         if (!userInBaseOp.isPresent()) { 
             System.out.println("При регистрации что-то пошло не так"); 
 
-            modelAndView.setViewName("regnewuser");             
+            modelAndView.setViewName("registrationForm");             
             modelAndView.addObject("content", "При регистрации что-то пошло не так");
             return modelAndView;
         } 
@@ -253,34 +253,34 @@ public class TranlatorController {
         nameOfCurrentUser = userInBaseOp.get().getUsername(); 
         System.out.println("Новый пользователь " + nameOfCurrentUser + " внесен в базу" );
 
-        modelAndView.setViewName("application4"); 
+        modelAndView.setViewName("index"); 
         modelAndView.addObject("content", "Добро пожаловать, " + nameOfCurrentUser + "!"); 
-        modelAndView.addObject("user", nameOfCurrentUser); 
+        modelAndView.addObject("userName", nameOfCurrentUser); 
         return modelAndView;
     }
 
 
     //разлогинивание юзера
-    @PostMapping(value = "/getout")
-    public ModelAndView logout() {   
+    @PostMapping(value = "/logOut")
+    public ModelAndView logOut() {   
         
-        System.out.println("controller /getout started"); 
+        System.out.println("controller /logOut started"); 
         String logoutedUserName = nameOfCurrentUser;
         nameOfCurrentUser = "";
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("application4");
+        modelAndView.setViewName("index");
         modelAndView.addObject("content", "Пользователь " + logoutedUserName + " разлогинился"); 
-        modelAndView.addObject("user", nameOfCurrentUser); 
+        modelAndView.addObject("userName", nameOfCurrentUser); 
         return modelAndView; 
     }
 
 
     //создание урока
-    @PostMapping(value = "/createlesson")
+    @PostMapping(value = "/createLesson")
     public ResponseEntity<String> createLesson(@RequestBody JsonDTO request) throws Exception {   
         
-        System.out.println("controller /createlesson started"); 
+        System.out.println("controller /createLesson started"); 
         String textFromUser = "src\\main\\resources\\static\\textFromUser.txt"; 
         
         Path path = Paths.get(textFromUser); 
@@ -305,10 +305,10 @@ public class TranlatorController {
 
 
     //отображение созданного урока 
-    @GetMapping(value = "/showlesson")
+    @GetMapping(value = "/showLesson")
     public ModelAndView showLesson() {   
         
-        System.out.println("controller /showlesson started");  
+        System.out.println("controller /showLesson started");  
         String filePath = "src\\main\\resources\\static\\textFromUser.txt"; 
         String content = "";
 
@@ -335,21 +335,31 @@ public class TranlatorController {
         }
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("application4"); 
+        modelAndView.setViewName("index"); 
         modelAndView.addObject("lessonNumber", lessonNumber); 
         modelAndView.addObject("lessonTitle", lessonTitle); 
         modelAndView.addObject("lessonContent", lessonContent);         
-        modelAndView.addObject("user", nameOfCurrentUser); 
+        modelAndView.addObject("userName", nameOfCurrentUser); 
         return modelAndView; 
     }
 
   
     //страница с уроками пользователя
-    @PostMapping(value = "/lessons")
-    public ModelAndView getLessons() {   
+    @PostMapping(value = "/showLessonList")
+    public ModelAndView showLessonList() {   
         
-        System.out.println("controller /lessons started"); 
+        System.out.println("controller /showLessonList started"); 
         List<Lesson> lessonList = null; 
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("index"); 
+        modelAndView.addObject("userName", nameOfCurrentUser); 
+
+        if(nameOfCurrentUser.isBlank() || nameOfCurrentUser == null) { 
+            String note = "Зарегистрируйтесь, чтобы посмотреть список Ваших уроков";             
+            modelAndView.addObject("content", note);             
+            return modelAndView; 
+        }
 
         try {
             User currentUser = userDao.getUserByUsername(nameOfCurrentUser).get();
@@ -359,10 +369,13 @@ public class TranlatorController {
             e.printStackTrace(); 
         } 
 
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("application4");
-        modelAndView.addObject("lessonList", lessonList); 
-        modelAndView.addObject("user", nameOfCurrentUser); 
+        if(lessonList == null || lessonList.isEmpty()) { 
+            String note = "У пользователя " + nameOfCurrentUser + " еще нет уроков";             
+            modelAndView.addObject("content", note);             
+            return modelAndView; 
+        }
+        
+        modelAndView.addObject("lessonList", lessonList);         
         return modelAndView; 
     } 
 
@@ -374,8 +387,8 @@ public class TranlatorController {
         System.out.println("controller /deleteLesson started");         
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("application4"); 
-        modelAndView.addObject("user", nameOfCurrentUser); 
+        modelAndView.setViewName("index"); 
+        modelAndView.addObject("userName", nameOfCurrentUser); 
         return modelAndView; 
     } 
 
@@ -401,37 +414,53 @@ public class TranlatorController {
         }
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("application4");
+        modelAndView.setViewName("index");
         modelAndView.addObject("lessonNumber", lessonNumber); 
         modelAndView.addObject("lessonTitle", lessonTitle); 
         modelAndView.addObject("lessonContent", lessonContent);         
-        modelAndView.addObject("user", nameOfCurrentUser); 
+        modelAndView.addObject("userName", nameOfCurrentUser); 
         return modelAndView; 
     }
     
 
     //пользовательский словарь
-    @PostMapping(value = "/vocabulary")
-    public ModelAndView getVocabulary() {   
+    @PostMapping(value = "/showVocabulary")
+    public ModelAndView showVocabulary() {   
         
-        System.out.println("controller /vocabulary started");  
-        List<Word> list = textFormater.showVocabularyAsTable(nameOfCurrentUser); 
+        System.out.println("controller /showVocabulary started");  
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("application4");     
-        modelAndView.addObject("words", list);
-        modelAndView.addObject("user", nameOfCurrentUser); 
+        modelAndView.setViewName("index"); 
+        modelAndView.addObject("userName", nameOfCurrentUser); 
+
+        if(nameOfCurrentUser.isBlank() || nameOfCurrentUser == null) { 
+            String note = "Зарегистрируйтесь, чтобы посмотреть Ваш словарь ";             
+            modelAndView.addObject("content", note);             
+            return modelAndView; 
+        }
+
+        List<Word> wordList = textFormater.showVocabularyAsTable(nameOfCurrentUser); 
+
+        if(wordList == null || wordList.isEmpty()) { 
+            String note = 
+                "У пользователя " + nameOfCurrentUser + " еще нет словаря " + "\n" +
+                "Словарь появится, когда будет создан хотя бы один урок ";             
+            modelAndView.addObject("content", note);             
+            return modelAndView; 
+        } 
+        
+        modelAndView.addObject("words", wordList);         
         return modelAndView; 
     } 
 
     
     //удаление слова 
-    @PostMapping(value = "/delete/{id}")
-    public ModelAndView deleteWord(
+    @PostMapping(value = "/deleteWord/{id}")
+    public ModelAndView deleteWord (
             @PathVariable Long id, 
             @RequestParam("scrollPosition") String position) { 
                 
-        System.out.println("controller /delete started");         
+        System.out.println("controller /deleteWord started");         
         System.out.println("позиция прокрутки " + position); 
         
         int number = 1; 
@@ -442,13 +471,14 @@ public class TranlatorController {
         } 
        
         wordDao.deleteWord(id); 
-        List<Word> list = textFormater.showVocabularyAsTable(nameOfCurrentUser); 
+        List<Word> wordList = textFormater.showVocabularyAsTable(nameOfCurrentUser); 
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("application4"); 
-        modelAndView.addObject("words", list); 
+        modelAndView.setViewName("index"); 
+        modelAndView.addObject("words", wordList); 
         modelAndView.addObject("scrollInfo", number);
-        modelAndView.addObject("user", nameOfCurrentUser); 
+        modelAndView.addObject("userName", nameOfCurrentUser); 
         return modelAndView; 
     } 
+
 } 
