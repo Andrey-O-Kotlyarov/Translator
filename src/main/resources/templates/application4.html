@@ -36,7 +36,7 @@
         right: 190px; 
         /*margin: -24px 0 0 909px; */
       } 
-      .button-and-field { 
+      .buttonAndField { 
         width: 100%; 
         height: 130px; 
         /*background: #FFDB89; */
@@ -44,7 +44,7 @@
         padding: 2px 0 10px 0; 
         display: flex;        
       }
-      .field-and-instructon { 
+      .fieldAndInstructon { 
         /*width: 62%; */
         width: 809px; 
         height: 100px; 
@@ -97,7 +97,7 @@
       .registration:hover { 
         box-shadow: 0 9px 10px rgba(0, 0, 0, 0.4);
       } 
-      .username-block { 
+      .usernameBlock { 
         /*width: 117px; */
         width: 90%; 
         height: 17px; 
@@ -111,7 +111,7 @@
         top: 66%; 
         left: 5%;
       }       
-      .login-avatar { 
+      .loginAvatar { 
         /*width: 50px; */
         width: 49px; 
         margin: 0px auto 0px auto; 
@@ -133,7 +133,7 @@
         margin: 86px auto 50px 70px; 
         /*text-align: center; */
       }    
-      .button-block { 
+      .buttonBlock { 
         width: 200px;
         height: 100px;       
         display: flex;        
@@ -141,7 +141,7 @@
         align-items: flex-end;     
         margin: 91px 20px 10px auto;         
       } 
-      .button-block-2 { 
+      .buttonBlock2 { 
         width: 200px;
         height: 300px;      
         display: flex;        
@@ -149,7 +149,7 @@
         align-items: flex-end;     
         margin: 121px 20px 10px auto;         
       } 
-      .button-block-3 { 
+      .buttonBlock3 { 
         width: 200px;
         height: 80px;      
         display: flex;        
@@ -157,7 +157,7 @@
         align-items: flex-end;     
         margin: 0px 20px -85px auto;  
       }
-      .download-button { 
+      .downloadButton { 
         width: 150px;
         height: 66px;
         margin: 0px 0px 25px auto;       
@@ -175,28 +175,26 @@
         box-shadow: 0 8px 0 #2E7D32, 0 9px 10px rgba(0, 0, 0, 0.4);   
         transition: all 0.1s ease;
       }
-      .download-button:active {
+      .downloadButton:active {
         top: 8px; 
         box-shadow: 0 0 0 #2E7D32, 0 0 5px rgba(0, 0, 0, 0.4);
       }  
-      .separating-line {
+      .separatingLine {
         height: 4px;
         background: rgba(128, 0, 0, 1); 
-        //margin: 166px 210px 42px 20px; 
         margin: 166px 210px 42px 20px;   
       }
-      .text-block {
+      .textBlock {
         white-space: pre-line; 
         /*white-space: pre-wrap; */        
         /*position: absolute; */
         /*width: 74%; */
         /*top: 520px; */
         /*right: 220px; */
-        width: 950px; 
-        //margin: 0px 0px 120px 124px; 
+        width: 950px;  
         margin: 0px 0px 0px 124px; 
       } 
-      .image-block {         
+      .imageBlock {         
         width: 950px;
         position: absolute; 
         top: 520px;         
@@ -207,6 +205,38 @@
       .hidden {
         display: none; 
       } 
+      /* Стили для списка уроков */
+      .lessonList { 
+        color: rgba(128, 0, 0, 1);   
+        font-size: 18px; 
+        font-weight: bold; 
+        margin: 0px auto 0px 124px; 
+      } 
+      .lessonNumberColumn { 
+        width: 50px; 
+      } 
+      .lessonTitleColumn { 
+        width: 480px; 
+        color: black; 
+        font-size: 14px; 
+        font-weight: normal; 
+        white-space: nowrap;
+        overflow: hidden; 
+        text-overflow: ellipsis; 
+        display: inline-block; 
+      } 
+      .lessonButton { 
+        background: #FFF8CC; 
+        color: rgba(0, 0, 0, 0.5); 
+        border: none;   
+        font-size: 14px; 
+        font-weight: bold; 
+      } 
+      .lessonButton:hover {         
+        border: none; 
+        color: rgba(128, 0, 0, 1);  
+      } 
+      /* Стили для отображения словаря */
       .vocabulary {
         color: rgba(128, 0, 0, 1);   
         font-size: 17px; 
@@ -215,54 +245,62 @@
         margin: 0px auto 0px 124px; 
         /*text-align: center; */
       } 
-      .column { 
+      .vocabularyColumn { 
         width: 250px; 
       } 
-      .delete { 
+      .wordDeleteButton { 
         background: #FFF8CC; 
         color: rgba(0, 0, 0, 0.5); 
         border: none;   
         font-size: 14px; 
         font-weight: bold;   
       }
-      .delete:hover {         
+      .wordDeleteButton:hover {         
         border: none; 
         color: rgba(128, 0, 0, 1);  
       }    
       /* Стили для содержимого урока */ 
-      .lesson-without-number-title { 
+      .titleOfLessonWithoutNumber { 
         margin: 0px auto 50px 124px; 
         white-space: pre-line; 
       } 
-      .lesson-number-title { 
+      .titleOfLesson { 
         color: rgba(128, 0, 0, 1);   
         font-size: 20px; 
         font-weight: bold; 
-        margin: 50px auto 50px 200px; 
+        margin: 30px auto 70px 200px; 
       } 
-      .flex-unit {
+      .flexUnit {
         display: flex; 
         justify-content: space-between; 
         align-items: baseline; 
         width: 950px;
         margin: 0px 0px 10px 124px;
       } 
-      .flex-column { 
+      .flexColumn { 
         display: flex; 
         justify-content: space-between; 
         align-items: baseline; 
         width: 48%;         
         //margin-bottom: 45px;        
       } 
-      .word {
+      .word { 
+        font-size: 14px; 
+        font-weight: bold;
         width: 38%; /* Узкая колонка для слов */
         margin-bottom: -8px;  
       } 
       .trans { 
+        font-size: 14px; 
+        font-weight: bold;
         width: 62%; /* Широкая колонка для переводов */
         margin-bottom: -8px;  
       } 
-      .text-fragment { 
+      .textFragment { 
+        width: 950px;
+        margin: 35px 0px 0px 124px; 
+      } 
+      .translatedFragment { 
         width: 950px;
         margin: 35px 0px 0px 124px; 
       }
@@ -287,10 +325,10 @@
       </button> 
     </form> 
 
-    <form class="button-block-3" action="/regform" method="GET">  
+    <form class="buttonBlock3" action="/regform" method="GET">  
       <button class="registration">
-        <img class="login-avatar" src="/images/login-avatar.png">
-        <div class="username-block">  
+        <img class="loginAvatar" src="/images/login-avatar.png">
+        <div class="usernameBlock">  
           <div th:if="${user != null && !#strings.isEmpty(user)}" th:text="${user}">    
           </div> 
           <div th:unless="${user != null && !#strings.isEmpty(user)}">
@@ -300,28 +338,28 @@
       </button> 
     </form>
         
-    <form class="button-and-field" action="/screen" method="GET">       
-      <div class="field-and-instructon">         
+    <form class="buttonAndField" action="/screen" method="GET">       
+      <div class="fieldAndInstructon">         
         <input class="field" type="text" name="login">
         <div>
           вставьте сюда URL страницы, которую хотите отсканировать, и нажмите кнопку "сканировать"
         </div>        
       </div> 
-      <div class="button-block"> 
+      <div class="buttonBlock"> 
         <div>                  
-          <button class="download-button" type="submit" name="bigSize" value="false">
+          <button class="downloadButton" type="submit" name="bigSize" value="false">
             сканировать
           </button>  
         </div>
         <div>                          
-          <button class="download-button" type="submit" name="bigSize" value="true">
+          <button class="downloadButton" type="submit" name="bigSize" value="true">
             сканировать <br/> 1500 строк
           </button> 
         </div>                
       </div>     
     </form> 
 
-    <div class="button-and-field" >
+    <div class="buttonAndField" >
       <div class="instruction">
         Если страница отсканировалась не целиком, нажмите кнопку "сканировать 1500 строк". <br/>
         Когда скан страницы загружен, то для распознания текста нажмите кнопку "распознать". <br/>
@@ -330,24 +368,24 @@
         содержащие по тридцать новых слов. Каждый такой фрагмент будет снабжен <br/> 
         контекстным словариком из тридцати слов с переводом. 
       </div>
-      <div class="button-block-2">   
+      <div class="buttonBlock2">   
         <div>
-          <button class="download-button" id="recoButton">
+          <button class="downloadButton" id="recoButton">
             распознать
           </button>          
         </div>
         <div>        
-          <button class="download-button" id="studyButton">
+          <button class="downloadButton" id="studyButton">
             создать <br/> урок
           </button> 
         </div> 
         <form action="/lessons" method="POST">        
-          <button class="download-button">
+          <button class="downloadButton">
             ваши уроки
           </button> 
         </form> 
         <form action="/vocabulary" method="POST">        
-          <button class="download-button" id="vocaButton">
+          <button class="downloadButton" id="vocaButton">
             словарь
           </button> 
         </form> 
@@ -355,33 +393,57 @@
     </div> 
 
     <img class="picture2" src="/images/cactusbrown9.png"> 
-    <div class="separating-line"> </div>        
+    <div class="separatingLine"> </div>        
     
-    <div class="text-block" th:text="${content}" id="container" > </div> 
-    <img class="image-block" th:src="@{${imagePath}}" id="myImage" />     
+    <!-- динамический контент -->
+    <div class="textBlock" th:text="${content}" id="container" > </div> 
+    <img class="imageBlock" th:src="@{${imagePath}}" id="myImage" />     
     <canvas class="hidden" width="0" height="0" id="hidden-canvas" > </canvas>  
 
     <div id="theImage"> </div> 
 
+    <!-- список уроков -->
+    <table class="lessonList">        
+        <tr th:each = "lesson : ${lessonList}"> 
+          <td class="lessonNumberColumn" th:text="${lesson.number}"> </td>
+          <td class="lessonTitleColumn" th:text="${lesson.title}"> </td> 
+          <td>    
+            <button class="lessonButton" 
+                    th:attr="onclick='deleteLesson(' + ${lesson.id} + '); return false;'"> 
+              удалить
+            </button>             
+          </td>
+          <td>    
+            <button class="lessonButton" 
+                    th:attr="onclick='showSelectedLesson(' + ${lesson.id} + '); return false;'"> 
+              показать
+            </button>             
+          </td>
+        </tr>         
+    </table>
+
+    <!-- словарь -->
     <table class="vocabulary">        
         <tr th:each = "word : ${words}"> 
-          <td class="column" th:text="${word.rusWord}"> </td>
-          <td class="column" th:text="${word.engWord}"> </td> 
+          <td class="vocabularyColumn" th:text="${word.rusWord}"> </td>
+          <td class="vocabularyColumn" th:text="${word.engWord}"> </td> 
           <td>    
-            <button class="delete" th:attr="onclick='handleDelete(' + ${word.id} + '); return false;'"> 
+            <button class="wordDeleteButton" 
+                    th:attr="onclick='deleteWord(' + ${word.id} + '); return false;'"> 
               удалить
             </button>             
           </td>
         </tr>         
     </table>
 
+    <!-- заголовок отображаемого урока -->
     <div>
-        <div  class="lesson-number-title"
+        <div  class="titleOfLesson"
               th:if="${lessonNumber != null}">
             Урок <span th:text="${lessonNumber}"> </span>
             пользователя <span th:text="${user}"> </span>
         </div> 
-        <div  class="lesson-without-number-title"
+        <div  class="titleOfLessonWithoutNumber"
               th:if="${lessonNumber == null}"
               th:text="${lessonTitle}"> 
         </div>      
@@ -395,55 +457,60 @@
     <!-- 2. для каждого юнита извлечем перевод фрагмента--> 
     <!-- 4. добавим разделитель -->
     <div th:each="unit : ${lessonContent}">       
-      <div class="flex-unit" th:each="i : ${#numbers.sequence(0, (unit.pairs.size()/2))}" >   
+        <div class="flexUnit" th:each="i : ${#numbers.sequence(0, (unit.pairs.size()/2))}" >   
 
-        <!-- колонка пар из первой половины пар -->
-        <div class="flex-column">
-          <div class="word"  
-              th:if="${i lt unit.pairs.size()/2}" 
-              th:text="${unit.pairs.get(i).word}"></div>
-          <div class="trans" 
-              th:if="${i lt unit.pairs.size()/2}" 
-              th:text="${unit.pairs.get(i).translation}"></div>
-        </div>
+          <!-- колонка пар из первой половины пар -->
+          <div class="flexColumn">
+            <div class="word"  
+                th:if="${i lt unit.pairs.size()/2}" 
+                th:text="${unit.pairs.get(i).word}"></div>
+            <div class="trans" 
+                th:if="${i lt unit.pairs.size()/2}" 
+                th:text="${unit.pairs.get(i).translation}"></div>
+          </div>
 
-        <!-- колонка пар из второй половины пар -->
-        <div class="flex-column">
-          <div class="word"  
-              th:if="${(i + unit.pairs.size()/2) lt unit.pairs.size()}" 
-              th:text="${unit.pairs.get(i + unit.pairs.size()/2).word}"></div>
-          <div class="trans" 
-              th:if="${(i + unit.pairs.size()/2) lt unit.pairs.size()}" 
-              th:text="${unit.pairs.get(i + unit.pairs.size()/2).translation}"></div>
-        </div>
-      </div> <!-- Конец .flex-unit -->
+          <!-- колонка пар из второй половины пар -->
+          <div class="flexColumn">
+            <div class="word"  
+                th:if="${(i + unit.pairs.size()/2) lt unit.pairs.size()}" 
+                th:text="${unit.pairs.get(i + unit.pairs.size()/2).word}"></div>
+            <div class="trans" 
+                th:if="${(i + unit.pairs.size()/2) lt unit.pairs.size()}" 
+                th:text="${unit.pairs.get(i + unit.pairs.size()/2).translation}"></div>
+          </div>
+        </div> <!-- Конец .flex-unit -->
 
-      <!-- Фрагмент текста -->
-      <div class="text-fragment">
-        <p th:text="${unit.textFragment}"></p>
-      </div> 
+        <!-- Фрагмент текста -->
+        <div class="textFragment">
+          <p th:text="${unit.textFragment}"></p>
+        </div> 
 
-      <!-- Переведенный фрагмент -->
-      <div class="text-fragment">
-        <p th:text="${unit.translation}"></p>
-      </div> 
+        <!-- Переведенный фрагмент -->
+        <div class="translatedFragment">
+          <p th:text="${unit.translation}"></p>
+        </div> 
     
-      <hr class="separator">
-    </div> <!-- Конец цикла по юнитам -->
+        <hr class="separator">
+    </div> <!-- перебрали все юниты -->
 
-
+    <!-- позиция перемотки -->
     <div style="display:none;" th:text="${scrollInfo}" id="scroll"> </div>
 
+    <!-- формы отправки данных для функций -->
     <div style="display:none;"> 
-      <form action="/delete/" method="post" id="deleteForm">
-        <input type="hidden" name="scrollPosition" id="scrollPositionInput" value=""/>         
-      </form>
+        <form action="/delete/" method="post" id="deleteWordForm">
+          <input type="hidden" name="scrollPosition" id="scrollPositionInput" value=""/>         
+        </form>
+        <form action="/deleteLesson/" method="post" id="deleteLessonForm">     
+        </form>
+        <form action="/showSelectedLesson/" method="post" id="showSelectedLessonForm">       
+        </form>
     </div> 
   </body>
 
   <script>      
-    function handleDelete(wordId) {
-      let form = document.getElementById('deleteForm');  
+    function deleteWord(wordId) {
+      let form = document.getElementById('deleteWordForm');  
       form.action = '/delete/' + wordId; 
       document.getElementById('scrollPositionInput').value = window.scrollY;       
       form.submit();
@@ -463,6 +530,20 @@
       $(window).scrollTop(lastScrollPosition); 
     }); 
     */
+
+
+    function deleteLesson(lessonId) { 
+      let form = document.getElementById('deleteLessonForm');  
+      form.action = '/deleteLesson/' + lessonId;      
+      form.submit();
+    } 
+
+
+    function showSelectedLesson(lessonId) {
+      let form = document.getElementById('showSelectedLessonForm');  
+      form.action = '/showSelectedLesson/' + lessonId;     
+      form.submit(); 
+    }
 
     
     document.getElementById('studyButton').addEventListener('click', function () { 

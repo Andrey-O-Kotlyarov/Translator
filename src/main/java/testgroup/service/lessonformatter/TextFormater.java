@@ -215,7 +215,8 @@ public class TextFormater {
         // помещаем это сообщение в тайтл урока и возвращаем этот урок
         // не добавляя его в базу 
         try { 
-            String test = unitList.get(0).getTextFragment(); 
+            //String test = 
+            unitList.get(0).getTextFragment(); 
         } catch (Exception e) { 
             String note = 
                 "Все слова из переданного текста уже есть в словаре данного пользователя " + "\n" 
@@ -225,19 +226,7 @@ public class TextFormater {
             return Optional.of(newLesson); 
         } 
 
-            // это пока не работает
-        // а если в содержимом что-то есть, то создаем из него урок, помещаем его в базу 
-        // и возвращаем этот урок из базы        
         return addLessonToBase(title, unitList, currentUser); 
-
-        /* 
-        Lesson newLesson = new Lesson(); 
-        newLesson.setNumber(1L); 
-        newLesson.setTitle("бла бла"); 
-        newLesson.setContent(unitList); 
-        newLesson.setUser(currentUser); 
-        return Optional.of(newLesson); 
-        */
     } 
     
 

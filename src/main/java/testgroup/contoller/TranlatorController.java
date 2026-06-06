@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody; 
 import org.springframework.web.bind.annotation.RequestParam; 
-import org.springframework.web.servlet.ModelAndView; 
+import org.springframework.web.servlet.ModelAndView;
+import testgroup.model.dao.LessonDao;
 import testgroup.model.dao.UserDao;
 import testgroup.model.dao.WordDao;
 import testgroup.model.dto.JsonDTO;
@@ -34,10 +35,13 @@ import testgroup.service.screenrecognizer.TessRecognizer;
 public class TranlatorController { 
     
     @Autowired
-    private UserDao userService;  
+    private UserDao userDao;  
 
     @Autowired
-    private WordDao wordService; 
+    private WordDao wordDao; 
+
+    @Autowired
+    private LessonDao lessonDao; 
 
     @Autowired
     private TextFormater textFormater; 
@@ -183,7 +187,7 @@ public class TranlatorController {
         
         System.out.println("controller /olduser started"); 
         Optional<User> userInBaseOp = 
-            userService.getUserByUsernameAndPass(username, pass); 
+            userDao.getUserByUsernameAndPass(username, pass); 
 
         if (!userInBaseOp.isPresent()) { 
             System.out.println("Пользователь не найден в базе"); 
@@ -228,7 +232,7 @@ public class TranlatorController {
         ModelAndView modelAndView = new ModelAndView();  
 
         try {
-            id = userService.createUser(mail, username, pass); 
+            id = userDao.createUser(mail, username, pass); 
         } catch (Exception e) {
             System.out.println("Такой пользователь уже есть в базе"); 
 
@@ -237,7 +241,7 @@ public class TranlatorController {
             return modelAndView;
         }          
 
-        Optional<User> userInBaseOp = userService.getUserById(id); 
+        Optional<User> userInBaseOp = userDao.getUserById(id); 
         if (!userInBaseOp.isPresent()) { 
             System.out.println("При регистрации что-то пошло не так"); 
 
@@ -317,24 +321,24 @@ public class TranlatorController {
         }
         
         Lesson lesson = null; 
-        Long number = null;  
-        String title = "";  
+        Long lessonNumber = null;  
+        String lessonTitle = "";  
         List<LessonUnit> lessonContent = null; 
 
         Optional<Lesson> lessonOp = 
             textFormater.makeLesson(content, nameOfCurrentUser); 
         if(lessonOp.isPresent()) { 
-            lesson = lessonOp.get(); 
-            number = lesson.getNumber();  
-            title = lesson.getTitle();  
+            lesson = lessonOp.get();
+            lessonNumber = lesson.getNumber();  
+            lessonTitle = lesson.getTitle();  
             lessonContent = lesson.getContent(); 
         }
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("application4");
-        modelAndView.addObject("lessonNumber", number); 
-        modelAndView.addObject("lessonContent", lessonContent); 
-        modelAndView.addObject("lessonTitle", title); 
+        modelAndView.setViewName("application4"); 
+        modelAndView.addObject("lessonNumber", lessonNumber); 
+        modelAndView.addObject("lessonTitle", lessonTitle); 
+        modelAndView.addObject("lessonContent", lessonContent);         
         modelAndView.addObject("user", nameOfCurrentUser); 
         return modelAndView; 
     }
@@ -344,12 +348,63 @@ public class TranlatorController {
     @PostMapping(value = "/lessons")
     public ModelAndView getLessons() {   
         
-        System.out.println("controller /lessons started");                       
-        String insertingText = "здесь будут уроки пользователя";
+        System.out.println("controller /lessons started"); 
+        List<Lesson> lessonList = null; 
+
+        try {
+            User currentUser = userDao.getUserByUsername(nameOfCurrentUser).get();
+            lessonList = lessonDao.getAllLessonsForUser(currentUser); 
+        } catch(Exception e) {
+            System.out.println("какие-то проблемы с получением списка уроков"); 
+            e.printStackTrace(); 
+        } 
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("application4");
-        modelAndView.addObject("content", insertingText); 
+        modelAndView.addObject("lessonList", lessonList); 
+        modelAndView.addObject("user", nameOfCurrentUser); 
+        return modelAndView; 
+    } 
+
+
+    //удаление урока
+    @PostMapping(value = "/deleteLesson/{id}")
+    public ModelAndView deleteLesson(@PathVariable Long id) {   
+        
+        System.out.println("controller /deleteLesson started");         
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("application4"); 
+        modelAndView.addObject("user", nameOfCurrentUser); 
+        return modelAndView; 
+    } 
+
+
+    //отображение выбранного урока из списка
+    @PostMapping(value = "/showSelectedLesson/{id}")
+    public ModelAndView showSelectedLesson(@PathVariable Long id) {   
+        
+        System.out.println("controller /showSelectedLesson started"); 
+        System.out.println(id); 
+
+        Lesson lesson = null; 
+        Long lessonNumber = null;  
+        String lessonTitle = "";  
+        List<LessonUnit> lessonContent = null; 
+        
+        Optional<Lesson> lessonOp = lessonDao.getLessonById(id); 
+        if(lessonOp.isPresent()) { 
+            lesson = lessonOp.get(); 
+            lessonNumber = lesson.getNumber();  
+            lessonTitle = lesson.getTitle();  
+            lessonContent = lesson.getContent(); 
+        }
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("application4");
+        modelAndView.addObject("lessonNumber", lessonNumber); 
+        modelAndView.addObject("lessonTitle", lessonTitle); 
+        modelAndView.addObject("lessonContent", lessonContent);         
         modelAndView.addObject("user", nameOfCurrentUser); 
         return modelAndView; 
     }
@@ -369,7 +424,7 @@ public class TranlatorController {
         return modelAndView; 
     } 
 
-
+    
     //удаление слова 
     @PostMapping(value = "/delete/{id}")
     public ModelAndView deleteWord(
@@ -386,7 +441,7 @@ public class TranlatorController {
             System.out.println("Строка не является числом"); 
         } 
        
-        wordService.deleteWord(id); 
+        wordDao.deleteWord(id); 
         List<Word> list = textFormater.showVocabularyAsTable(nameOfCurrentUser); 
 
         ModelAndView modelAndView = new ModelAndView();
