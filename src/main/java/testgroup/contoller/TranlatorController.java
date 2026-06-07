@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.stream.Collectors; 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Controller; 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -169,12 +169,12 @@ public class TranlatorController {
 
 
     //форма регистрации и входа
-    @GetMapping(value = "/showLoginForm")
-    public ModelAndView showLoginForm() {   
+    @GetMapping(value = "/showLoginPage")
+    public ModelAndView showLoginPage() {   
         
-        System.out.println("controller /showLoginForm started");  
+        System.out.println("controller /showLoginPage started");  
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("loginForm"); 
+        modelAndView.setViewName("loginPage"); 
         return modelAndView; 
     }
 
@@ -193,7 +193,7 @@ public class TranlatorController {
             System.out.println("Пользователь не найден в базе"); 
 
             ModelAndView modelAndView = new ModelAndView(); 
-            modelAndView.setViewName("loginForm"); 
+            modelAndView.setViewName("loginPage"); 
             modelAndView.addObject("content", "Пользователь не найден");
             return modelAndView;
         } 
@@ -210,12 +210,12 @@ public class TranlatorController {
 
 
     //форма создания нового пользователя 
-    @PostMapping(value = "/showRegistrationForm")
-    public ModelAndView showRegistrationForm () {   
+    @PostMapping(value = "/showRegistrationPage")
+    public ModelAndView showRegistrationPage () {   
         
-        System.out.println("controller /showRegistrationForm started");  
+        System.out.println("controller /showRegistrationPage started");  
         ModelAndView modelAndView = new ModelAndView();            
-        modelAndView.setViewName("registrationForm"); 
+        modelAndView.setViewName("registrationPage"); 
         return modelAndView; 
     }
 
@@ -236,7 +236,7 @@ public class TranlatorController {
         } catch (Exception e) {
             System.out.println("Такой пользователь уже есть в базе"); 
 
-            modelAndView.setViewName("registrationForm"); 
+            modelAndView.setViewName("registrationPage"); 
             modelAndView.addObject("content", "Такой пользователь уже зарегистрирован");
             return modelAndView;
         }          
@@ -245,7 +245,7 @@ public class TranlatorController {
         if (!userInBaseOp.isPresent()) { 
             System.out.println("При регистрации что-то пошло не так"); 
 
-            modelAndView.setViewName("registrationForm");             
+            modelAndView.setViewName("registrationPage");             
             modelAndView.addObject("content", "При регистрации что-то пошло не так");
             return modelAndView;
         } 
@@ -380,11 +380,11 @@ public class TranlatorController {
     } 
 
 
-    //удаление урока
-    @PostMapping(value = "/deleteLesson/{id}")
-    public ModelAndView deleteLesson(@PathVariable Long id) {   
+    //страница с подтверждением удаления урока
+    @PostMapping(value = "/showDeleteLessonPage/{id}")
+    public ModelAndView showDeleteLessonPage(@PathVariable Long id) {   
         
-        System.out.println("controller /deleteLesson started");         
+        System.out.println("controller /showDeleteLessonPage started");         
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("deleteLessonPage");    
@@ -500,5 +500,51 @@ public class TranlatorController {
         modelAndView.addObject("userName", nameOfCurrentUser); 
         return modelAndView; 
     } 
+
+
+    //страница с подтверждением удаления всего словаря 
+    @PostMapping(value = "/showDeleteVocabularyPage")
+    public ModelAndView showDeleteVocabularyPage(
+            @RequestParam(name = "userName") String userName) {   
+        
+        System.out.println("controller /showDeleteVocabularyPage started");   
+        
+        Long userId = null; 
+
+        Optional<User> userOp = userDao.getUserByUsername(userName);         
+        if(userOp.isPresent()) { 
+            userId = userOp.get().getId(); 
+        } 
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("deleteVocabularyPage");    
+        modelAndView.addObject("userId", userId);         
+        return modelAndView; 
+    } 
+
+
+    //удаление всего словаря 
+    @PostMapping(value = "/deleteVocabulary")
+    public ModelAndView deleteVocabulary(
+            @RequestParam(name = "userId") String userId) {   
+        
+        System.out.println("controller /deleteVocabulary started");         
+
+        try {
+            Long number = Long.parseLong(userId);             
+            wordDao.deleteByUser_Id(number); 
+        } catch(NumberFormatException e) {
+            System.out.println("Не удалось удалить словарь"); 
+        } 
+
+        String note = "Словарь пользователя " + nameOfCurrentUser + " удален"; 
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("index"); 
+        modelAndView.addObject("userName", nameOfCurrentUser); 
+        modelAndView.addObject("content", note);         
+        return modelAndView; 
+    } 
+
 
 } 

@@ -259,8 +259,33 @@
         border: none; 
         color: rgba(128, 0, 0, 1);  
       }    
+      .vocaDeleteButton { 
+        /*width: 250px; */ 
+        height: 38px; 
+        margin: 30px 0px 25px auto;       
+        padding: 10px 50px;
+        color: white;
+        border: none;
+        border-radius: 12px; 
+        font-size: 18px;
+        font-weight: bold;  
+        background-color: #4CAF50;                
+        position: relative;
+        top: 0;        
+        box-shadow: 0 5px 0 #2E7D32, 0 9px 10px rgba(0, 0, 0, 0.4);   
+        transition: all 0.1s ease; 
+      } 
+      .vocaDeleteButton:active {
+        top: 5px; 
+        box-shadow: 0 0 0 #2E7D32, 0 0 5px rgba(0, 0, 0, 0.4);
+      }  
+      .vocaDeleteBlock { 
+        /*width: 250px; */ 
+        height: 120px; 
+        margin: 0px auto 0px 124px; 
+      }       
       /* Стили для содержимого урока */ 
-      .titleOfLessonWithoutNumber { 
+      .titleOfLessonWithoutNumber {  
         margin: 0px auto 50px 124px; 
         white-space: pre-line; 
       } 
@@ -325,7 +350,7 @@
       </button> 
     </form> 
 
-    <form class="buttonBlock3" action="/showLoginForm" method="GET">  
+    <form class="buttonBlock3" action="/showLoginPage" method="GET">  
       <button class="registration">
         <img class="loginAvatar" src="/images/login-avatar.png">
         <div class="usernameBlock">  
@@ -435,8 +460,21 @@
               удалить
             </button>             
           </td>
-        </tr>         
+        </tr>                
     </table>
+    
+    <!-- кнопка удаления словаря -->
+    <div th:if="${words != null }" class="vocaDeleteBlock">  
+      <form action="/showDeleteVocabularyPage" method="POST"> 
+        <input  style="display:none !important;" 
+                type="hidden" 
+                name="userName" 
+                th:value="${userName}">                     
+        <button class="vocaDeleteButton" type="submit" > 
+          удалить весь словарь
+        </button>
+      </form>
+    </div> 
 
     <!-- заголовок отображаемого урока -->
     <div>
@@ -503,7 +541,7 @@
         <form action="/delete/" method="post" id="deleteWordForm">
           <input type="hidden" name="scrollPosition" id="scrollPositionInput" value=""/>         
         </form>
-        <form action="/deleteLesson/" method="post" id="deleteLessonForm">     
+        <form action="/showDeleteLessonPage/" method="post" id="deleteLessonForm">     
         </form>
         <form action="/showSelectedLesson/" method="post" id="showSelectedLessonForm">       
         </form>
@@ -536,7 +574,7 @@
 
     function deleteLesson(lessonId) { 
       let form = document.getElementById('deleteLessonForm');  
-      form.action = '/deleteLesson/' + lessonId;      
+      form.action = '/showDeleteLessonPage/' + lessonId;      
       form.submit();
     } 
 

@@ -18,4 +18,8 @@ public interface WordRepository extends JpaRepository<Word, Long> {
     // Метод для получения всех слов по id пользователя
     List<Word> findAllByUser_Id(Long userId); 
 
+    void deleteByUser(User user); 
+
+    void deleteByUser_Id(Long userId); 
+
 } 

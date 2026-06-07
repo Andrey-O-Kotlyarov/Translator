@@ -12,6 +12,7 @@ public interface WordDao {
     public List<Word> getAllWordsForUser(User user); 
     public List<Word> getAllWordsForUserId(Long userId); 
     public void deleteWord(Long id); 
-
+    public void deleteByUser(User user); 
+    public void deleteByUser_Id(Long userId); 
 
 } 
