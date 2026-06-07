@@ -345,7 +345,7 @@ public class TranlatorController {
 
   
     //страница с уроками пользователя
-    @PostMapping(value = "/showLessonList")
+    @GetMapping(value = "/showLessonList")
     public ModelAndView showLessonList() {   
         
         System.out.println("controller /showLessonList started"); 
@@ -387,8 +387,28 @@ public class TranlatorController {
         System.out.println("controller /deleteLesson started");         
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("index"); 
-        modelAndView.addObject("userName", nameOfCurrentUser); 
+        modelAndView.setViewName("deleteLessonPage");    
+        modelAndView.addObject("lessonId", id);         
+        return modelAndView; 
+    } 
+
+
+    //действительно удаление урока
+    @PostMapping(value = "/reallyDeleteLesson")
+    public ModelAndView reallyDeleteLesson(
+            @RequestParam(name = "lessonId") String lessonId) {   
+        
+        System.out.println("controller /reallyDeleteLesson started");         
+
+        try {
+            Long number = Long.parseLong(lessonId); 
+            lessonDao.deleteLesson(number);
+        } catch(NumberFormatException e) {
+            System.out.println("Не удалось удалить урок"); 
+        }          
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/showLessonList"); 
         return modelAndView; 
     } 
 
@@ -443,8 +463,8 @@ public class TranlatorController {
 
         if(wordList == null || wordList.isEmpty()) { 
             String note = 
-                "У пользователя " + nameOfCurrentUser + " еще нет словаря " + "\n" +
-                "Словарь появится, когда будет создан хотя бы один урок ";             
+                "У пользователя " + nameOfCurrentUser + " еще нет словаря, или он был удален " + 
+                "\n" + "Чтобы словарь появился, создайте урок ";             
             modelAndView.addObject("content", note);             
             return modelAndView; 
         } 

@@ -34,10 +34,8 @@ public class TextFormater {
     // метод для составления текста урока 
     public Optional<Lesson> makeLesson(String originText, String nameOfCurrentUser) {         
         String fragment = ""; 
-        String contextVocabulary = ""; 
         List<WordPair> contextVoc = new ArrayList<>(); 
         List<LessonUnit> unitList = new ArrayList<>(); 
-        String publication = ""; 
         String title = ""; 
         int lengthOfTitle = 8; 
         int lengthOfContextVocabulary = 30; 
@@ -46,43 +44,17 @@ public class TextFormater {
         Optional<User> userOptional = userDao.getUserByUsername(nameOfCurrentUser); 
         String partForTranslator = ""; 
 
-        // если пользователь не найден, то обращений к базе делать не будем,
-        // просто по-быстрому составляем контекстный словарь и возвращаем его: 
+        // если пользователь не найден, то контент урока создавать не будем 
+        // создадим урок без контента, не добавляя его в базу 
+        // этот урок будет оберткой для сообщения о том, что пользователь не найден
+        // само сообщение положим в тайтл этого урока
         if (!userOptional.isPresent()) {
             System.out.println("пользователь, для которого формируется урок, в базе не найден"); 
-            int counter = 0; 
-
-            for (String word : words) { 
-                String execWord = word
-                    .replaceAll("[\\p{Punct}\\s–—]+", " ")
-                    .trim() 
-                    .toLowerCase(); 
-                fragment = fragment + word + " "; 
-
-                if (!execWord.isBlank()) {
-                    String iamToken = YandexTranslator.generIAMToken();    
-                    String translatedWord = 
-                        YandexTranslator.translate(execWord, "en", iamToken);                 
-                    contextVocabulary = contextVocabulary 
-                        + execWord + " " + " - " + " " + translatedWord + "\n"; 
-                } else {
-                    counter--; 
-                }
-                
-                if (counter < 29) {                     
-                    counter++; 
-                } else { 
-                    counter = 0; 
-                    publication = publication 
-                        + contextVocabulary + "\n" + "\n" 
-                        + fragment + "\n" + "\n" 
-                        + "===========================================================" 
-                        + "\n" + "\n"; 
-                    contextVocabulary = ""; 
-                    fragment = ""; 
-                }                
-            }
-            //return publication; 
+            String note = 
+                "Чтобы создать урок, залогиньтесь или создайте нового пользователя ";
+            Lesson newLesson = new Lesson(); 
+            newLesson.setTitle(note); 
+            return Optional.of(newLesson); 
         }
 
         // а если пользователь найден, 
@@ -177,9 +149,7 @@ public class TextFormater {
                     }
                     System.out.println("\n" + sWord); 
                     String tWord = translatedWords[i].toLowerCase();  
-                    System.out.println(tWord);                    
-                    //contextVocabulary = 
-                    //    contextVocabulary + sWord + " - " + tWord + "\n"; 
+                    System.out.println(tWord); 
                     WordPair pair = new WordPair(sWord, tWord); 
                     contextVoc.add(pair); 
                     try {
@@ -205,7 +175,7 @@ public class TextFormater {
                 unitList.add(unit); 
 
                 contextVoc = new ArrayList<>();  
-                contextVocabulary = ""; 
+                //contextVocabulary = ""; 
                 fragment = ""; 
                 partForTranslator = ""; 
             } 
@@ -267,43 +237,7 @@ public class TextFormater {
 
         return savedLessonOp; 
     }
-
-
-    // метод для отображения пользовательского словаря 
-    public String showVocabulary(String username) { 
-
-        User user = new User(); 
-        Optional<User> userInBaseOp = userDao.getUserByUsername(username); 
-        List<String> pairs = new ArrayList<>(); 
-        List<Word> list = new ArrayList<>();
-
-        if (userInBaseOp.isPresent()) { 
-            user = userInBaseOp.get(); 
-        } 
-
-        try {
-            list = wordDao.getAllWordsForUser(user);
-        } catch (Exception e) {
-            System.out.println("при поиске словаря что-то пошло не так"); 
-            return "Cловарь пользователя не найден"; 
-        }
-        
-        for (Word word : list) { 
-            String rusWord = word.getRusWord(); 
-            String engWord = word.getEngWord(); 
-            String pair = rusWord + " - " + engWord; 
-            pairs.add(pair); 
-        } 
-
-        Collections.sort(pairs); 
-        String userVocabulary = String.join("\n", pairs); 
-
-        if (userVocabulary.isBlank()) {
-            return "Cловарь пользователя не найден";
-        }
-        return userVocabulary;         
-    } 
-
+    
 
     // метод для отображения пользовательского словаря в виде таблицы
     public List<Word> showVocabularyAsTable(String username) { 
@@ -324,9 +258,10 @@ public class TextFormater {
         
         Collections.sort(words, Comparator.comparing(Word::getRusWord)); 
         return words;               
-    } 
-
-
+    }     
+    
+    
+    // метод для очистки фрагмента от нечитаемых символов и кавычек 
     private String cleanUnreadableCharacters(String input) {
         if (input == null) {
             return "";
@@ -346,5 +281,4 @@ public class TextFormater {
 
         return moreCleaned;
     } 
-
 } 
