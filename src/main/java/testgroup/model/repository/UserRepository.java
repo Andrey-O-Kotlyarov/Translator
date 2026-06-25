@@ -1,9 +1,9 @@
-package testgroup.dao; 
+package testgroup.model.repository; 
 
 import java.util.Optional; 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository; 
-import testgroup.model.User;
+import testgroup.model.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> { 

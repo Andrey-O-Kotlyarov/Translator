@@ -1,22 +1,23 @@
-package testgroup.service;
+package testgroup.model.dao;
 
 import java.util.List;
 import java.util.Optional; 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service; 
-import testgroup.dao.LessonRepository;
-import testgroup.model.Lesson;
-import testgroup.model.User;
+import org.springframework.beans.factory.annotation.Autowired; 
+import org.springframework.stereotype.Repository; 
+import testgroup.model.entity.Lesson;
+import testgroup.model.entity.User;
+import testgroup.model.repository.LessonRepository;
+import testgroup.service.lessonformatter.LessonUnit;
 
-@Service
-public class LessonServiceImpl implements LessonService { 
+@Repository
+public class LessonDaoImpl implements LessonDao { 
 
     @Autowired
     private LessonRepository lessonRepository; 
 
 
     @Override
-    public Long createLesson(Long number, String title, String content, User user) { 
+    public Long createLesson(Long number, String title, List<LessonUnit> content, User user) { 
         Lesson lesson = new Lesson(); 
         lesson.setNumber(number); 
         lesson.setTitle(title); 
@@ -37,7 +38,14 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public Optional<Lesson> getLatestLessonForUserId(Long userId) {
         return lessonRepository.findTopByUser_IdOrderByNumberDesc(userId);
-    } 
+    }     
+
+    
+    @Override
+    @SuppressWarnings("null")
+    public Optional<Lesson> getLessonById(Long id) {
+        return lessonRepository.findById(id); 
+    }
 
 
     @Override

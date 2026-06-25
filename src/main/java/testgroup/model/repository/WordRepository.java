@@ -1,11 +1,11 @@
-package testgroup.dao;
+package testgroup.model.repository;
 
 import java.util.List;
 import java.util.Optional; 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository; 
-import testgroup.model.User;
-import testgroup.model.Word;
+import testgroup.model.entity.User;
+import testgroup.model.entity.Word;
 
 @Repository
 public interface WordRepository extends JpaRepository<Word, Long> { 
@@ -17,5 +17,9 @@ public interface WordRepository extends JpaRepository<Word, Long> {
 
     // Метод для получения всех слов по id пользователя
     List<Word> findAllByUser_Id(Long userId); 
+
+    void deleteByUser(User user); 
+
+    void deleteByUser_Id(Long userId); 
 
 } 

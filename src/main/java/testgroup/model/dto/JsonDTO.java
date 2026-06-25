@@ -1,4 +1,4 @@
-package testgroup.dto;
+package testgroup.model.dto;
 
 public class JsonDTO { 
     private String content;

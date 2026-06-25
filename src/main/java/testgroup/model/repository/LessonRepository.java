@@ -1,14 +1,14 @@
-package testgroup.dao;
+package testgroup.model.repository;
 
 import java.util.List;
 import java.util.Optional; 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository; 
-import testgroup.model.Lesson;
-import testgroup.model.User;
+import testgroup.model.entity.Lesson;
+import testgroup.model.entity.User;
 
 @Repository
-public interface LessonRepository extends JpaRepository<Lesson, Long> { 
+public interface LessonRepository extends JpaRepository<testgroup.model.entity.Lesson, Long> { 
     
     // метод возвращает урок с наибольшим значением Number для заданного пользователя
     Optional<Lesson> findTopByUserOrderByNumberDesc(User user);

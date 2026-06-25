@@ -1,4 +1,4 @@
-package testgroup.model; 
+package testgroup.model.entity; 
  
 import java.util.List; 
 import jakarta.persistence.CascadeType;

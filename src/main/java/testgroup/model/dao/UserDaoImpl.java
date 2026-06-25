@@ -1,13 +1,13 @@
-package testgroup.service;
+package testgroup.model.dao;
 
 import java.util.Optional; 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service; 
-import testgroup.dao.UserRepository;
-import testgroup.model.User;
+import org.springframework.beans.factory.annotation.Autowired; 
+import org.springframework.stereotype.Repository; 
+import testgroup.model.entity.User;
+import testgroup.model.repository.UserRepository;
 
-@Service
-public class UserServiceImpl implements UserService { 
+@Repository
+public class UserDaoImpl implements UserDao { 
 
     @Autowired
     private UserRepository userRepository;

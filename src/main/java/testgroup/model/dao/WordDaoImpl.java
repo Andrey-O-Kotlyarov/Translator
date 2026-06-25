@@ -1,15 +1,16 @@
-package testgroup.service;
+package testgroup.model.dao;
 
 import java.util.List;
 import java.util.Optional; 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service; 
-import testgroup.dao.WordRepository; 
-import testgroup.model.User;
-import testgroup.model.Word;
+import org.springframework.beans.factory.annotation.Autowired; 
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional; 
+import testgroup.model.entity.User;
+import testgroup.model.entity.Word;
+import testgroup.model.repository.WordRepository;
 
-@Service
-public class WordServiceImpl implements WordService { 
+@Repository
+public class WordDaoImpl implements WordDao { 
 
     @Autowired
     private WordRepository wordRepository; 
@@ -55,7 +56,21 @@ public class WordServiceImpl implements WordService {
     @SuppressWarnings("null")
     public void deleteWord(Long id) {
         wordRepository.deleteById(id);
+    } 
+
+
+    @Override
+    @Transactional
+    public void deleteByUser(User user) { 
+        wordRepository.deleteByUser(user); 
     }
+
+
+    @Override
+    @Transactional
+    public void deleteByUser_Id(Long userId) { 
+        wordRepository.deleteByUser_Id(userId); 
+    } 
 
 
 } 

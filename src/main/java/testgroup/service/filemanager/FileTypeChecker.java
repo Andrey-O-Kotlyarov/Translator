@@ -1,4 +1,4 @@
-package testgroup.service;
+package testgroup.service.filemanager;
 
 import java.io.FileInputStream;
 import java.io.IOException; 

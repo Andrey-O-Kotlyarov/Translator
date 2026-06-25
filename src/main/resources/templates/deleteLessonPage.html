@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <title>reg form</title> 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="icon" href="/images/favi.png" sizes="any" type="image/png"/> 
+    <link rel="icon" href="/images/favicon-32x32.png" sizes="any" type="image/png"/> 
     <style>
       body {
         min-width: 460px; 
@@ -81,61 +81,50 @@
   </head>
 
   <body> 
-    <div class="reg">   
-      <div class="header">
-        <div class="header-string" th:if="${content != null && !#strings.isEmpty(content)}"  
-             th:id="'myDiv'" th:text="${content}">    
-        </div>
-        <div class="string" th:unless="${content != null && !#strings.isEmpty(content)}">
-          Ваши данные:
-        </div>
-      </div>  
-       
-      <form action="/olduser" method="post">        
-        <div class="naming-and-field">
-          <div class="naming"> Имя: </div>
-          <input class="field" type="text" name="username" required > <br> <br>
-        </div> 
+    <div class="reg"> 
+      <!-- имя пользователя -->
+      <div style="display:none;" th:text="${userName}" id="userNameData"> </div>
 
-        <div class="naming-and-field">
-          <div class="naming"> Пароль: </div>
-          <input class="field" type="text" name="pass" required > <br> <br>
-        </div> 
-        
-        <button class="download-button" type="submit">
-          войти
-        </button> 
-      </form> 
+      <div  style="display:none;"
+            th:text="${lessonId}" 
+            id="info">                
+      </div>       
+      <br> <br> 
 
-      <br>       
       <div class="small-string">
-        Вы еще не зарегистрированы? 
+        Вы уверены, что хотите удалить этот урок? 
       </div> 
-      <form action="/newuser" method="post">          
-        <button class="download-button" type="submit">
-          зарегистрироваться
-        </button> 
+      
+      <form action="/reallyDeleteLesson" method="post"> 
+        <input style="display:none !important;" 
+              type="hidden" 
+              name="lessonId" 
+              th:value="${lessonId}"> 
+        <input style="display:none !important;" 
+              type="hidden" 
+              name="userName" 
+              th:value="${userName}">
+        <button class="download-button" type="submit" >
+          удалить
+        </button>  
       </form> 
+      <br> <br> 
 
-      <br>       
-      <div class="small-string">
-        Хотите выйти или сменить аккаунт? 
-      </div> 
-      <form action="/getout" method="post">          
-        <button class="download-button" type="submit">
-          выйти
-        </button> 
-      </form> 
-
-      <br> 
       <div class="small-string"> 
         Передумали? 
       </div> 
-      <form action="/index" method="get">  
+
+      <form action="/showLessonList" method="get"> 
+        <input style="display:none !important;" 
+              type="hidden" 
+              name="userName" 
+              th:value="${userName}">
         <button class="download-button" type="submit">
-          вернуться на главную
+          вернуться к списку
         </button>  
-      </form>       
+      </form>   
+      <br> 
     </div> 
+
   </body> 
 </html>
