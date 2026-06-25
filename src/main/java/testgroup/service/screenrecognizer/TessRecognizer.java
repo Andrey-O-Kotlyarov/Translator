@@ -15,7 +15,8 @@ public class TessRecognizer {
     //метод для преобразования картинки в текстовый файл
     public static void recognizeText(String sourcePictureFile, String destTextFile) {
         ITesseract tesseract = new Tesseract();
-        tesseract.setDatapath("C:/langmodels"); // Директория с файлами *.traineddata
+        //tesseract.setDatapath("C:/langmodels"); // Директория с файлами *.traineddata 
+        tesseract.setDatapath("C:/Users/weiss/OneDrive/Desktop/language_teacher/winProgs/langmodels");         
         tesseract.setLanguage("rus"); // русский язык
         //tesseract.setVariable("user_defined_dpi", "300");
         

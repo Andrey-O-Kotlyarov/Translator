@@ -16,43 +16,61 @@ public class YandexTranslator {
         Translation[] translations; // Массив переводов (на случай, если мы переводили несколько фраз)
     }
 
+
     // Класс, который описывает один элемент в массиве translations
     class Translation {
         String text; // Переведенный текст
         String detectedLanguageCode; // Код языка, который был определен автоматически
     } 
-
+    
+    
+    // метод для получения iam токена с помощью утилиты yc в командной строке
     public static String generIAMToken() { 
         String iamToken = ""; 
 
         try { 
             // --- ПОЛУЧЕНИЕ IAM-ТОКЕНА ЧЕРЕЗ СИСТЕМНУЮ КОМАНДУ ---             
             // 1. Определяем путь к исполняемому файлу yc.exe
-            String pathToYc = "C:\\Users\\admin\\yandex-cloud\\bin\\yc.exe"; 
+            String pathToYc = 
+                "C:\\Users\\weiss\\OneDrive\\Desktop\\language_teacher\\winProgs\\yandex-cloud\\bin\\yc.exe"; 
 
-            // 2. Создаем команду. Это будет массив: [программа, аргумент]
-            String[] command = {pathToYc, "iam", "create-token"};
+            // 2. задаем свой OAuth токен
+            String yourOAuthToken = "y0__wgBENmiuwcYwd0TILmk_54XMJCy6uYIeafYCXxjgPnN_jOiaoA3PdRGuGo";     
 
-            // 3. Запускаем процесс
-            ProcessBuilder processBuilder = new ProcessBuilder(command);
-            Process process = processBuilder.start(); 
+            // 3. Создаем команду для командной строки, которая вызовет утилиту yc и установит OAuth токен
+            // команды для cli создаются в виде массива [программа, аргумент] 
+            // и передаются в командную строку с помощью ProcessBuilder:             
+            String[] configCommand = {pathToYc, "config", "set", "token", yourOAuthToken};
+            ProcessBuilder configBuilder = new ProcessBuilder(configCommand);
+            Process configProcess = configBuilder.start();
+            int configExitCode = configProcess.waitFor(); // Ждем завершения 
 
-            // Читаем вывод (stdout) из команды
-            BufferedReader reader = new BufferedReader(
-                new InputStreamReader(process.getInputStream()));            
-            iamToken = reader.readLine(); // Токен будет в первой строке
-            
-            int exitCode = process.waitFor();
-            if (exitCode != 0) {
-                // Если команда не сработала, прочитаем ошибку (stderr)
+            // 4. Если команда установки OAut токена не сработала, прочитаем ошибку (stderr)
+            if (configExitCode != 0) { 
                 BufferedReader errorReader = new BufferedReader(
-                    new InputStreamReader(process.getErrorStream()));
+                    new InputStreamReader(configProcess.getErrorStream()));
                 String errorLine;
                 System.err.println("Ошибка при выполнении 'yc iam create-token':");
                 while ((errorLine = errorReader.readLine()) != null) {
                     System.err.println(errorLine);
                 }
                 return "Ошибка при выполнении 'yc iam create-token'";
+            }
+
+            // 5. А если сработала, то отправляем следующую команду - для получения iam токена
+            // и читаем ее вывод 
+            if (configExitCode == 0) {
+                String[] iamCommand = {pathToYc, "iam", "create-token"};
+                ProcessBuilder iamBuilder = new ProcessBuilder(iamCommand);
+                Process iamProcess = iamBuilder.start(); 
+                BufferedReader reader = 
+                    new BufferedReader(new InputStreamReader(iamProcess.getInputStream()));
+
+                // В последней строке вывода будет iam токен
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    iamToken = line; 
+                }
             } 
             System.out.println("IAM-токен успешно получен через yc: " + iamToken); 
 
@@ -62,6 +80,8 @@ public class YandexTranslator {
         return iamToken;
     }
 
+
+    // метод для получения перевода 
     public static String translate(String sourceText, String targetLangCode, String iamToken) {
         
         try {

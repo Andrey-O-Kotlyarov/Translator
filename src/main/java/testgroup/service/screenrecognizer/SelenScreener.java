@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 public class SelenScreener {   
       
     private static String chromeDriverExe = 
-    //    "C:\\Users\\admin\\Downloads\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe"; 
-    "C:\\Users\\admin\\Downloads\\chromedriver-win64 (2)\\chromedriver-win64\\chromedriver.exe";
-    private static String smallSizeOfScreen = "1280,10000"; 
+    //"C:\\Users\\admin\\Downloads\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe"; 
+        "C:\\Users\\weiss\\OneDrive\\Desktop\\language_teacher\\winProgs\\chromedriver-win64 (2)\\chromedriver-win64\\chromedriver.exe"; 
+    private static String smallSizeOfScreen = "1280,12000"; 
     private static String bigSizeOfScreen = "1280,14500";
 
     //метод для сканирования сайта в файл .png

@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <title>reg new user</title> 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="icon" href="/images/favi.png" sizes="any" type="image/png"/> 
+    <link rel="icon" href="/images/favicon-32x32.png" sizes="any" type="image/png"/> 
     <style type="text/css">
       body {
         min-width: 460px; 
@@ -91,6 +91,9 @@
   </head>
 
   <body> 
+    <!-- имя пользователя -->
+    <div style="display:none;" th:text="${userName}" id="userNameData"> </div>
+    
     <div class="reg"> 
       <div class="header">
         <div class="header-string" th:if="${content != null && !#strings.isEmpty(content)}"  
@@ -116,6 +119,11 @@
           <div class="naming"> Пароль: </div>
           <input class="field" type="text" name="pass" required > <br> <br>
         </div> 
+
+        <input style="display:none !important;" 
+              type="hidden" 
+              name="userName" 
+              th:value="${userName}"> 
         
         <button class="download-button" type="submit">
           создать аккаунт
@@ -127,6 +135,10 @@
         Передумали? 
       </div> 
       <form action="/index" method="get">  
+        <input style="display:none !important;" 
+              type="hidden" 
+              name="userName" 
+              th:value="${userName}"> 
         <button class="download-button" type="submit">
           вернуться на главную
         </button>  

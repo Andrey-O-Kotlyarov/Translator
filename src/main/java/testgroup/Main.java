@@ -15,7 +15,7 @@ public class Main {
         
         // очистка временных скринов
         String folderPath = 
-            "C:\\Users\\admin\\Desktop\\translator\\src\\main\\resources\\static\\screens";
+            "C:\\Users\\weiss\\OneDrive\\Desktop\\translator\\src\\main\\resources\\static\\screens";
         int periodInMinutes = 30; 
         FileCleaner.startFileCleaning(folderPath, periodInMinutes);    
         

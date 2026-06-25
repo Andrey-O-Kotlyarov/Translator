@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <title>reg form</title> 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="icon" href="/images/favi.png" sizes="any" type="image/png"/> 
+    <link rel="icon" href="/images/favicon-32x32.png" sizes="any" type="image/png"/> 
     <style>
       body {
         min-width: 460px; 
@@ -82,6 +82,9 @@
 
   <body> 
     <div class="reg"> 
+      <!-- имя пользователя -->
+      <div style="display:none;" th:text="${userName}" id="userNameData"> </div>
+
       <div  style="display:none;"
             th:text="${lessonId}" 
             id="info">                
@@ -96,7 +99,11 @@
         <input style="display:none !important;" 
               type="hidden" 
               name="lessonId" 
-              th:value="${lessonId}">
+              th:value="${lessonId}"> 
+        <input style="display:none !important;" 
+              type="hidden" 
+              name="userName" 
+              th:value="${userName}">
         <button class="download-button" type="submit" >
           удалить
         </button>  
@@ -107,13 +114,17 @@
         Передумали? 
       </div> 
 
-      <form action="/showLessonList" method="get">  
+      <form action="/showLessonList" method="get"> 
+        <input style="display:none !important;" 
+              type="hidden" 
+              name="userName" 
+              th:value="${userName}">
         <button class="download-button" type="submit">
           вернуться к списку
         </button>  
       </form>   
       <br> 
-
     </div> 
+
   </body> 
 </html>
