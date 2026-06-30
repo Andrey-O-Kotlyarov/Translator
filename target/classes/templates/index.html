@@ -1,0 +1,788 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Application</title> 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="icon" href="/images/favicon-32x32.png" sizes="any" type="image/png"/> 
+    <style>
+      body {
+        min-width: 460px; 
+        background: #FFF8CC;
+        font-family: Helvetica; 
+        /*overflow-x: hidden; */
+      } 
+      .test {
+        position: absolute; 
+        width: 10%; 
+        height: 17px; 
+        background: rgba(128, 0, 0, 1); 
+        left: 1100px;
+        top: 84px; 
+        display: none; 
+      }
+      .picture { 
+        position: absolute; 
+        width: 380px; 
+        /*width: 29%; */
+        transform: rotate(24deg);
+        margin: -10px 0 0 -107px;  
+      } 
+      .picture2 { 
+        position: absolute;    
+        width: 13.9vw; 
+        top: calc(480px - 13.9vw);      
+        right: 190px; 
+        /*width: 183px; */
+        /*top: 289px; */         
+        /*left: 900px; */         
+        /*margin: -24px 0 0 909px; */
+      } 
+      .nosorog { 
+        position: absolute; 
+        width: 190px; 
+        margin: 10px 0 0 -10px; 
+      } 
+      .buttonAndField { 
+        width: 100%; 
+        height: 130px; 
+        /*background: #FFDB89; */
+        margin: 5px 0 10px 0; 
+        padding: 2px 0 10px 0; 
+        display: flex;        
+      }
+      .fieldAndInstructon { 
+        width: 62.25%; 
+        /*width: 809px; */
+        height: 100px; 
+        background: #FFF8CC;        
+        color: rgba(128, 0, 0, 1);   
+        font-size: 14px;  
+        font-weight: bold;  
+        margin: 89px auto 10px 200px;                  
+      } 
+      input:focus,
+      input:hover {
+        outline: none; 
+        border: none; 
+        box-shadow: none; 
+      }
+      .header { 
+        position: absolute; 
+        width: 46.66%; 
+        height: 65px; 
+        top: 10px;         
+        left: calc(8% + 200px);         
+        background: #FFDB89;
+        color: rgba(128, 0, 0, 1);
+        font-size: 47px; 
+        font-weight: bold;
+        text-align: center; 
+        border: none;
+        padding: 3px 0 0 0;  
+        border-radius: 20%; 
+        /*width: 614px; */          
+        /*left: 305px; */
+        /*left: 23.14%; */         
+        /*width: 76%; */
+        /*margin: 0px auto 24px 12%; */
+      }
+      .header:hover { 
+        box-shadow: 0 9px 10px rgba(0, 0, 0, 0.4);
+      }
+      .registration { 
+        background: #FFDB89;
+        width: 150px; 
+        height: 74px; 
+        border-radius: 20px; 
+        border: none; 
+        color: rgba(128, 0, 0, 1); 
+        font-size: 14px;
+        font-weight: bold; 
+        text-align: center; 
+        margin: 2px auto -80px 50px; 
+        overflow: hidden; 
+        position: relative; 
+      } 
+      .registration:hover { 
+        box-shadow: 0 9px 10px rgba(0, 0, 0, 0.4);
+      } 
+      .usernameBlock { 
+        /*width: 117px; */
+        width: 90%; 
+        height: 17px; 
+        background: #FFDB89; 
+        /*background: white; */
+        overflow: hidden; 
+        word-break: break-all; 
+        white-space: nowrap; 
+        margin: -4px auto 0px auto; 
+        position: absolute; 
+        top: 66%; 
+        left: 5%;
+      }       
+      .loginAvatar { 
+        /*width: 50px; */
+        width: 49px; 
+        margin: 0px auto 0px auto; 
+      }
+      .field { 
+        width: 100%; 
+        height: 50px; 
+        border: none; 
+        color: rgba(128, 0, 0, 1); 
+        font-size: 19px;
+        background: white;         
+      }     
+      .instruction { 
+        width: 70%; 
+        height: 100px;       
+        color: rgba(128, 0, 0, 1);   
+        font-size: 19px; 
+        font-weight: bold;   
+        margin: 72px auto 50px max(20px, calc(25% - 255px)); 
+        /*text-align: center; */
+      }   
+      .reference { 
+        color: rgba(0, 0, 0, 0.5); 
+      } 
+      .reference:hover {         
+        color: rgba(128, 0, 0, 1);   
+      } 
+      .buttonBlock { 
+        width: 200px;
+        height: 100px;       
+        display: flex;        
+        flex-direction: column; 
+        align-items: flex-end;     
+        margin: 91px 20px 10px auto;         
+      } 
+      .buttonBlock2 { 
+        width: 200px;
+        height: 300px;      
+        display: flex;        
+        flex-direction: column; 
+        align-items: flex-end;     
+        margin: 30px 20px 10px auto;         
+      } 
+      .buttonBlock3 { 
+        width: 200px;
+        height: 80px;      
+        display: flex;        
+        flex-direction: column; 
+        align-items: flex-end;     
+        margin: 0px 20px -85px auto;  
+      }
+      .downloadButton { 
+        width: 150px;
+        height: 66px;
+        margin: 0px 0px 25px auto;       
+        padding: 10px 20px;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        /*cursor: pointer; */
+        font-size: 18px;
+        font-weight: bold; 
+        /*text-shadow: 2px 3px grey; */
+        background-color: #4CAF50;                
+        position: relative;
+        top: 0;        
+        box-shadow: 0 8px 0 #2E7D32, 0 9px 10px rgba(0, 0, 0, 0.4);   
+        transition: all 0.1s ease;
+      }
+      .downloadButton:active {
+        top: 8px; 
+        box-shadow: 0 0 0 #2E7D32, 0 0 5px rgba(0, 0, 0, 0.4);
+      }  
+      .separatingLine {
+        height: 4px;
+        background: rgba(128, 0, 0, 1); 
+        margin: 174px 210px 42px 20px;   
+      } 
+      .textBlock { 
+        width: 74%; 
+        white-space: pre-line;    
+        /*margin: 0px 0px 120px 124px; */
+        margin: 0px 0px 120px max(100px, calc(25% - 180px)); 
+        /*width: calc(100% - 352px); */         
+        /*width: 950px; */  
+      } 
+      .imageBlock {    
+        position: absolute; 
+        width: 73%;         
+        top: 520px;  
+        right: 220px;  
+        /*width: calc(100% - 352px); */        
+        /*left: 132px; */
+        /*width: 950px; */            
+        /*margin: -118px auto 100px 125px; */ 
+      } 
+      .hidden {
+        display: none; 
+      } 
+      /* Стили для списка уроков */ 
+      .lessonList { 
+        color: rgba(128, 0, 0, 1);   
+        font-size: 18px; 
+        font-weight: bold; 
+        margin: 0px auto 0px 124px; 
+      } 
+      .tableHeader { 
+        width: 500px; 
+        font-size: 20px; 
+        color: rgba(128, 0, 0, 1); 
+        font-weight: bold; 
+        background: #FFDB89; 
+        border: none;
+        border-radius: 10px;
+        width: max-content;
+        margin: 0 50px 10px 275px; 
+        padding: 12px 50px 12px 50px; 
+      }
+      .lessonNumberHeader { 
+        width: 70px; 
+        font-size: 14px; 
+        color: rgba(128, 0, 0, 1); 
+        font-weight: bold; 
+        padding: 0 0 10px 0; 
+      }
+      .lessonTitleHeader { 
+        width: 100px; 
+        font-size: 14px; 
+        color: rgba(128, 0, 0, 1); 
+        font-weight: bold; 
+        padding: 0 0 10px 155px; 
+      } 
+      .doingsHeader {         
+        /*width: 100px; */
+        font-size: 14px; 
+        color: rgba(128, 0, 0, 1); 
+        font-weight: bold; 
+        margin: 0px auto 0px -41px; 
+        padding: 0 0 10px 0; 
+      }
+      .lessonNumberColumn { 
+        font-size: 14px; 
+        width: 70px; 
+        padding: 0 0 0 17px; 
+      } 
+      .lessonTitleColumn { 
+        width: 480px; 
+        color: black; 
+        font-size: 14px; 
+        font-weight: normal; 
+        white-space: nowrap;
+        overflow: hidden; 
+        text-overflow: ellipsis; 
+        display: inline-block; 
+      } 
+      .lessonButton { 
+        background: #FFF8CC; 
+        color: rgba(0, 0, 0, 0.5); 
+        border: none;   
+        font-size: 14px; 
+        font-weight: bold; 
+      } 
+      .lessonButton:hover {         
+        border: none; 
+        color: rgba(128, 0, 0, 1);  
+      } 
+      /* Стили для отображения словаря */
+      .vocabulary {
+        color: rgba(128, 0, 0, 1);   
+        font-size: 17px; 
+        font-weight: bold;    
+        margin: 0px auto 0px 124px; 
+        /*text-align: center; */
+      } 
+      .vocabularyColumn { 
+        width: 250px; 
+      } 
+      .wordDeleteButton { 
+        background: #FFF8CC; 
+        color: rgba(0, 0, 0, 0.5); 
+        border: none;   
+        font-size: 14px; 
+        font-weight: bold;   
+      }
+      .wordDeleteButton:hover {         
+        border: none; 
+        color: rgba(128, 0, 0, 1);  
+      }    
+      .vocaDeleteButton { 
+        /*width: 250px; */ 
+        height: 38px; 
+        margin: 30px 0px 25px auto;       
+        padding: 10px 50px;
+        color: white;
+        border: none;
+        border-radius: 12px; 
+        font-size: 18px;
+        font-weight: bold;  
+        background-color: #4CAF50;                
+        position: relative;
+        top: 0;        
+        box-shadow: 0 5px 0 #2E7D32, 0 9px 10px rgba(0, 0, 0, 0.4);   
+        transition: all 0.1s ease; 
+      } 
+      .vocaDeleteButton:active {
+        top: 5px; 
+        box-shadow: 0 0 0 #2E7D32, 0 0 5px rgba(0, 0, 0, 0.4);
+      }  
+      .vocaDeleteBlock { 
+        /*width: 250px; */ 
+        height: 120px; 
+        margin: 0px auto 0px 124px; 
+      }       
+      /* Стили для содержимого урока */ 
+      .titleOfLessonWithoutNumber {                    
+        /*margin: 0px auto 50px 124px; */
+        margin: 0px auto 50px max(100px, calc(25% - 180px)); 
+        white-space: pre-line; 
+      } 
+      .titleOfLesson { 
+        color: rgba(128, 0, 0, 1);           
+        background: #FFDB89; 
+        border: none;
+        border-radius: 10px;
+        width: max-content; 
+        font-size: 20px; 
+        font-weight: bold; 
+
+        /*margin: 30px auto 70px 200px; */         
+        margin: 0px auto 70px 275px; 
+        padding: 12px 70px 12px 70px; 
+      
+      } 
+      .flexUnit {
+        display: flex; 
+        justify-content: space-between; 
+        align-items: baseline; 
+        width: 950px;
+        margin: 0px 0px 10px 124px;
+      } 
+      .flexColumn { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: baseline; 
+        width: 48%;         
+        /*margin-bottom: 45px; */      
+      } 
+      .word { 
+        font-size: 14px; 
+        font-weight: bold;
+        width: 38%; /* Узкая колонка для слов */
+        margin-bottom: -8px;  
+      } 
+      .trans { 
+        font-size: 14px; 
+        font-weight: bold;
+        width: 62%; /* Широкая колонка для переводов */
+        margin-bottom: -8px;  
+      } 
+      .textFragment { 
+        width: 950px;
+        margin: 35px 0px 0px 124px; 
+      } 
+      .translatedFragment { 
+        width: 950px;
+        margin: 35px 0px 0px 124px; 
+      }
+      .separator { 
+        border: 0;
+        border-top: 4px solid rgba(128, 0, 0, 1);
+        width: 950px; 
+        margin: 45px 0px 35px 124px; 
+      } 
+    </style>
+  </head>
+
+  <body>
+    <div class="test"> 
+    </div> 
+
+    <!-- логотип -->
+    <img class="nosorog" src="/images/nosorogtransparent.png"> 
+    
+    <!-- заголовок, он же кнопка перехода на главную страницу -->
+    <form action="/index" method="GET"> 
+      <input type="hidden" name="userName" th:value="${userName}"> 
+      <button class="header" id="indexButton">
+        Language Teacher
+      </button> 
+    </form> 
+
+    <!-- кнопка входа/регистрации пользователя -->
+    <form class="buttonBlock3" action="/showLoginPage" method="GET">  
+      <button class="registration" type="submit" name="userName" th:value="${userName}">
+        <img class="loginAvatar" src="/images/login-avatar.png">
+        <div class="usernameBlock">  
+          <div th:if="${userName != null && !#strings.isEmpty(userName)}" th:text="${userName}">    
+          </div> 
+          <div th:unless="${userName != null && !#strings.isEmpty(userName)}">
+            войти
+          </div>
+        </div>
+      </button> 
+    </form>
+        
+    <!-- форма с кнопкой для отправки юрл страницы, которую нужно отсканировать -->
+    <form class="buttonAndField" action="/showScreen" method="GET">       
+      <div class="fieldAndInstructon">         
+        <input class="field" type="text" name="screeningPageURL"> 
+        <input type="hidden" name="userName" th:value="${userName}"> 
+        <div>
+          вставьте сюда URL страницы и нажмите кнопку "сканировать"
+        </div>        
+      </div> 
+      <div class="buttonBlock"> 
+        <div>                  
+          <button class="downloadButton" 
+                  type="submit" 
+                  name="bigSize" value="false" >
+            сканировать
+          </button>  
+        </div>              
+      </div>     
+    </form> 
+
+    <!-- инструкция и кнопки, начиная с кнопки Распознать -->
+    <div class="buttonAndField" >
+      <div class="instruction">
+        1. В окно, на которое смотрит носорог, вставьте ссылку на страницу книги, из текста которой <br/>
+        вы хотите создать учебный материал. Интересные книги можно найти 
+        <a class="reference" href="https://author.today">вот здесь</a> <br/> <br/> 
+        2. Нажмите кнопку "сканировать". Когда скан страницы загрузится, нажмите "распознать" <br/> 
+        для распознания отсканированного текста. Это может занять несколько минут. <br/> <br/>
+        3. Нажмите кнопку "создать урок". Текст будет разделен на фрагменты, содержащие <br/> 
+        примерно по тридцать новых слов. Каждый фрагмент будет сопровожден кратким <br/> 
+        словариком из тридцати - тридцати пяти новых слов с переводом. 
+      </div>
+      <div class="buttonBlock2">   
+        <div>
+          <button class="downloadButton" id="recoButton">
+            распознать
+          </button>          
+        </div>
+        <div>        
+          <button class="downloadButton" id="studyButton">
+            создать <br/> урок
+          </button> 
+        </div> 
+        <form action="/showLessonList" method="GET">    
+          <input type="hidden" name="userName" th:value="${userName}">    
+          <button class="downloadButton">
+            ваши уроки
+          </button> 
+        </form> 
+        <form action="/showVocabulary" method="POST">  
+          <input type="hidden" name="userName" th:value="${userName}">      
+          <button class="downloadButton" id="vocaButton">
+            ваш словарь
+          </button> 
+        </form> 
+        <form action="/selectLanguage" method="POST"> 
+          <input type="hidden" name="userName" th:value="${userName}">       
+          <button class="downloadButton" id="langButton">
+            выбор языка
+          </button> 
+        </form> 
+      </div> 
+    </div> 
+
+    <!-- кактус и линия -->
+    <img class="picture2" src="/images/cactusbrown9.png"> 
+    <div class="separatingLine"> </div>        
+    
+    <!-- динамический контент - сканы страниц и тексты -->
+    <div class="textBlock" th:if="${content != null }" th:text="${content}" id="container" > </div>      
+    <div> 
+      <img class="imageBlock"
+           th:if="${imageFileName != null }" 
+           th:src="@{/getImage(fileName=${imageFileName})}" 
+           id="myImage" />    
+      <img th:unless="${imageFileName != null }"  
+           style="display:none;" 
+           id="myImage" />     
+    </div> 
+    
+    <!-- служебный раздел для отправки скана страницы обратно на сервер -->
+    <canvas class="hidden" width="0" height="0" id="hidden-canvas" > </canvas>  
+
+    <!-- при оффлайн отладке сюда вставлялась картинка при нажатии кнопки -->
+    <div id="theImage"> </div> 
+
+    <!-- список уроков -->
+    <table th:if="${lessonList != null }" class="lessonList"> 
+        <div class="tableHeader"> Список созданных Вами уроков </div>   
+        <tr> <td> </br> </td> </tr>      
+        <tr> 
+          <td class="lessonNumberHeader" > номер: </td>
+          <td class="lessonTitleHeader" > тема урока: </td> 
+          <td> </td>
+          <td  > <div class="doingsHeader"> выполнить: </div> </td>
+        </tr>    
+        <tr th:each = "lesson : ${lessonList}"> 
+          <td class="lessonNumberColumn" th:text="${lesson.number}"> </td>
+          <td class="lessonTitleColumn" th:text="${lesson.title}"> </td> 
+          <td>    
+            <button class="lessonButton" 
+                    th:attr="onclick='deleteLesson(' + ${lesson.id} + '); return false;'"> 
+              удалить
+            </button>             
+          </td>
+          <td>    
+            <button class="lessonButton" 
+                    th:attr="onclick='showSelectedLesson(' + ${lesson.id} + '); return false;'"> 
+              показать
+            </button>             
+          </td>
+        </tr>         
+    </table>
+
+    <!-- словарь -->
+    <table class="vocabulary">        
+        <tr th:each = "word : ${words}"> 
+          <td class="vocabularyColumn" th:text="${word.rusWord}"> </td>
+          <td class="vocabularyColumn" th:text="${word.engWord}"> </td> 
+          <td>    
+            <button class="wordDeleteButton" 
+                    th:attr="onclick='deleteWord(' + ${word.id} + '); return false;'"> 
+              удалить
+            </button>             
+          </td>
+        </tr>                
+    </table>
+    
+    <!-- кнопка удаления словаря -->
+    <div th:if="${words != null }" class="vocaDeleteBlock">  
+      <form action="/showDeleteVocabularyPage" method="POST"> 
+        <input  style="display:none !important;" 
+                type="hidden" 
+                name="userName" 
+                th:value="${userName}">                     
+        <button class="vocaDeleteButton" type="submit" > 
+          удалить весь словарь
+        </button>
+      </form>
+    </div> 
+
+    <!-- заголовок отображаемого урока -->
+    <div>
+        <div  class="titleOfLesson"
+              th:if="${lessonNumber != null}">
+            Урок <span th:text="${lessonNumber}"> </span>
+            пользователя <span th:text="${userName}"> </span>
+        </div> 
+        <div  class="titleOfLessonWithoutNumber"
+              th:if="${lessonNumber == null}"
+              th:text="${lessonTitle}"> 
+        </div>      
+    </div>
+
+    <!-- Перебираем каждый юнит урока --> 
+    <!-- 1. для каждого юнита переберем половину пар слов --> 
+    <!-- 1а.  если номер пары равен индексу из первой половины, помещаем ее в первую колонку-->
+    <!-- 1б.  а если номер пары равен индекс + половина длины списка, то во вторую-->
+    <!-- 2. для каждого юнита извлечем фрагмент текста -->
+    <!-- 2. для каждого юнита извлечем перевод фрагмента--> 
+    <!-- 4. добавим разделитель -->
+    <div th:each="unit : ${lessonContent}">       
+        <div class="flexUnit" th:each="i : ${#numbers.sequence(0, (unit.pairs.size()/2))}" >   
+
+          <!-- колонка пар из первой половины пар -->
+          <div class="flexColumn">
+            <div class="word"  
+                th:if="${i lt unit.pairs.size()/2}" 
+                th:text="${unit.pairs.get(i).word}"></div>
+            <div class="trans" 
+                th:if="${i lt unit.pairs.size()/2}" 
+                th:text="${unit.pairs.get(i).translation}"></div>
+          </div>
+
+          <!-- колонка пар из второй половины пар -->
+          <div class="flexColumn">
+            <div class="word"  
+                th:if="${(i + unit.pairs.size()/2) lt unit.pairs.size()}" 
+                th:text="${unit.pairs.get(i + unit.pairs.size()/2).word}"></div>
+            <div class="trans" 
+                th:if="${(i + unit.pairs.size()/2) lt unit.pairs.size()}" 
+                th:text="${unit.pairs.get(i + unit.pairs.size()/2).translation}"></div>
+          </div>
+        </div> <!-- Конец .flex-unit -->
+
+        <!-- Фрагмент текста -->
+        <div class="textFragment">
+          <p th:text="${unit.textFragment}"></p>
+        </div> 
+
+        <!-- Переведенный фрагмент -->
+        <div class="translatedFragment">
+          <p th:text="${unit.translation}"></p>
+        </div> 
+    
+        <hr class="separator">
+    </div> <!-- перебрали все юниты -->
+
+    <!-- позиция перемотки -->
+    <div style="display:none;" th:text="${scrollInfo}" id="scroll"> </div>
+
+    <!-- имя пользователя -->
+    <div style="display:none;" th:text="${userName}" id="userNameData"> </div>
+
+    <!-- формы отправки данных для функций -->
+    <div style="display:none;"> 
+        <form action="/delete/" method="post" id="deleteWordForm">
+          <input type="hidden" name="scrollPosition" id="scrollPositionInput" value=""/>         
+        </form>
+        <form action="/showDeleteLessonPage/" method="post" id="deleteLessonForm">             
+        </form>         
+        <form action="/showSelectedLesson/" method="post" id="showSelectedLessonForm">       
+        </form>
+    </div> 
+  </body>  
+
+  <script>      
+    function deleteWord(wordId) {
+      let form = document.getElementById('deleteWordForm');  
+      let userName = $('#userNameData').text();
+
+      form.action = '/deleteWord/' + wordId + '?userName=' + encodeURIComponent(userName); 
+      document.getElementById('scrollPositionInput').value = window.scrollY;       
+      form.submit();
+    }        
+    
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var lastScrollPosition = document.getElementById('scroll').textContent.trim();
+      window.scrollTo({ top: parseInt(lastScrollPosition), behavior: 'auto' });
+    });     
+
+    
+    /*
+    $(document).ready(function() { 
+      var lastScrollPosition = $('#scroll').text().trim(); 
+      lastScrollPosition = parseInt(lastScrollPosition); 
+      $(window).scrollTop(lastScrollPosition); 
+    }); 
+    */
+
+
+    function deleteLesson(lessonId) { 
+      let form = document.getElementById('deleteLessonForm');  
+      let userName = $('#userNameData').text(); 
+
+      if (userName) { 
+        form.action = '/showDeleteLessonPage/' + lessonId + '?userName=' + encodeURIComponent(userName);
+      } else { 
+        form.action = '/showDeleteLessonPage/' + lessonId;
+      } 
+ 
+      form.submit();
+    } 
+
+
+    function showSelectedLesson(lessonId) {
+      let form = document.getElementById('showSelectedLessonForm');  
+      let userName = $('#userNameData').text(); 
+
+      if (userName) { 
+        form.action = '/showSelectedLesson/' + lessonId + '?userName=' + encodeURIComponent(userName);
+      } else { 
+        form.action = '/showSelectedLesson/' + lessonId;
+      } 
+
+      form.submit(); 
+    }
+
+    
+    document.getElementById('studyButton').addEventListener('click', function () { 
+      var content = $("#container").text(); 
+      var userNameFromDiv = $('#userNameData').text(); 
+
+      $.ajax({
+        url: "/createLesson",
+        type: "POST", 
+        contentType: 'application/json',
+        data: JSON.stringify({
+          content: content,
+          userName: userNameFromDiv
+        }),
+        complete: function(){ 
+          if(userNameFromDiv) {
+              window.location.href = '/showLesson?userName=' + encodeURIComponent(userNameFromDiv);
+          } else {
+              // Если имени нет, просто переходим на страницу без параметров
+              window.location.href = '/showLesson';
+          }
+        }
+      });     
+    });     
+    
+    
+    // отправка картинки для распознавания текста на /uploadScreenForRecognizing 
+    // и переход на /showRecognizedText
+    document.getElementById('recoButton').addEventListener('click', function () { 
+      const imageElement = document.getElementById('myImage'); 
+      const canvas = document.getElementById('hidden-canvas');
+
+      canvas.width = imageElement.naturalWidth;
+      canvas.height = imageElement.naturalHeight; 
+
+      const context = canvas.getContext('2d');
+      context.drawImage(imageElement, 0, 0); 
+
+      const imageDataUrl = canvas.toDataURL('image/png'); 
+
+      var userNameFromDiv = $('#userNameData').text(); 
+      
+      $.ajax({
+        url: '/uploadScreenForRecognizing',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ 
+          content: imageDataUrl,
+          userName: userNameFromDiv 
+        }),
+        complete: function() { 
+          //var userNameFromDiv = $('#userNameData').text(); 
+          //window.location.href = '/showRecognizedText'; 
+          if(userNameFromDiv) {
+              window.location.href = '/showRecognizedText?userName=' + encodeURIComponent(userNameFromDiv);
+          } else {
+              // Если имени нет, просто переходим на страницу без параметров
+              window.location.href = '/showRecognizedText';
+          }
+        }
+      });  
+    }); 
+
+
+    // функция для отладочной оффлайн загрузки картинки при нажатии кнопки vocaButton
+    document.getElementById('vocaButton').addEventListener('click', function() { 
+      const imgElement = new Image(); 
+      imgElement.classList.add('imageBlock');
+      imgElement.onload = function () {
+        const container = document.getElementById('theImage');
+        container.appendChild(imgElement);
+      };
+      imgElement.onerror = function () {
+        console.error("Ошибка загрузки изображения");
+      };
+      imgElement.src = '/screenshot.png';
+    }); 
+
+    
+    /*
+    // скрипты выполняются на стороне браузера, поэтому этот скрипт не нужен
+    document.getElementById('theButton').addEventListener('click', function() { 
+      var block = document.getElementById('container');
+      fetch("Коллбэк1.txt") 
+        .then(res => res.text())
+        .then(html => block.innerText = html);
+        //.then(html => container.innerText = html);
+    });
+    */
+  </script>
+</html>

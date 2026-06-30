@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Redirecting...</title>
+</head>
+<body onload="document.forms[0].submit();">
+    <h1>Please wait while you are being redirected.</h1>
+
+    <!-- Форма отправляется на нужный эндпоинт -->
+    <form id="autoForm" method="post" th:action="@{/showLessonList}">
+        <!-- Данные из модели становятся скрытыми полями 
+        <input type="hidden" th:name="'name'" th:value="${formData.name}" />
+        <input type="hidden" th:name="'email'" th:value="${formData.email}" /> 
+        -->
+    </form>
+
+</body>
+</html>
